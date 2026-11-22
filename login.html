@@ -8,267 +8,68 @@
     <!-- خط تجوال -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     
-    <!-- مكتبات فايربيس -->
+    <!-- مكتبات فايربيس (Compat لضمان عمل الكود القديم) -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <style>
         :root {
-            --primary-color: #E31D4A; /* لون وينش الأحمر */
+            --primary-color: #E31D4A;
             --bg-color: #FFFFFF;
             --text-color: #333333;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Tajawal', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-        }
-
-        /* Header & Logo */
-        .header {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-
-        .logo {
-            font-size: 32px;
-            font-weight: 900;
-            color: var(--primary-color);
-            font-style: italic;
-            letter-spacing: -2px;
-        }
-
-        .back-arrow {
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            opacity: 0.6;
-            display: none;
-        }
-
-        h1 {
-            color: var(--primary-color);
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        p.subtitle {
-            color: #666;
-            font-size: 14px;
-            text-align: center;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-
-        /* Forms */
-        .form-group {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .input-wrapper {
-            display: flex;
-            align-items: center;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 5px 15px;
-            background: #fff;
-            height: 55px;
-        }
-
-        .country-code {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-left: 1px solid #eee;
-            padding-left: 12px;
-            margin-left: 10px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        /* --- تعديل العلم اللبناني هنا --- */
-        .flag {
-            width: 24px;
-            height: 16px;
-            /* أحمر - أبيض - أحمر */
-            background: linear-gradient(to bottom, #ED1C24 33%, #FFFFFF 33%, #FFFFFF 66%, #ED1C24 66%);
-            border: 1px solid #ccc;
-            border-radius: 2px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* شجرة الأرز (محاكاة بسيطة بعلامة خضراء في المنتصف) */
-        .flag::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 4px;
-            height: 8px;
-            background-color: #00A651; /* أخضر لبناني */
-            border-radius: 1px;
-        }
-        /* --------------------------- */
-
-        input[type="tel"], input[type="number"] {
-            border: none;
-            outline: none;
-            width: 100%;
-            font-size: 16px;
-            direction: ltr;
-            text-align: right;
-            background: transparent;
-        }
-
-        .terms-text {
-            font-size: 12px;
-            color: #888;
-            text-align: center;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-        .terms-text a {
-            color: var(--primary-color);
-            text-decoration: underline;
-        }
-
-        .btn-primary {
-            width: 100%;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 30px;
-            padding: 16px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; min-height: 100vh; padding: 20px; }
+        .container { width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; position: relative; }
         
+        .header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .logo { font-size: 32px; font-weight: 900; color: var(--primary-color); font-style: italic; letter-spacing: -2px; }
+        .back-arrow { width: 30px; height: 30px; cursor: pointer; opacity: 0.6; display: none; }
+        
+        h1 { color: var(--primary-color); font-size: 28px; font-weight: 700; margin-bottom: 10px; text-align: center; }
+        p.subtitle { color: #666; font-size: 14px; text-align: center; margin-bottom: 30px; line-height: 1.5; }
+        
+        .form-group { width: 100%; margin-bottom: 20px; }
+        .input-wrapper { display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; padding: 5px 15px; background: #fff; height: 55px; }
+        .country-code { display: flex; align-items: center; gap: 8px; border-left: 1px solid #eee; padding-left: 12px; margin-left: 10px; font-weight: bold; color: #333; }
+        
+        /* العلم اللبناني */
+        .flag { width: 24px; height: 16px; background: linear-gradient(to bottom, #ED1C24 33%, #FFFFFF 33%, #FFFFFF 66%, #ED1C24 66%); border: 1px solid #ccc; border-radius: 2px; position: relative; overflow: hidden; }
+        .flag::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 4px; height: 8px; background-color: #00A651; border-radius: 1px; }
+        
+        input[type="tel"], input[type="number"] { border: none; outline: none; width: 100%; font-size: 16px; direction: ltr; text-align: right; background: transparent; }
+        
+        .terms-text { font-size: 12px; color: #888; text-align: center; margin-bottom: 30px; line-height: 1.6; }
+        .terms-text a { color: var(--primary-color); text-decoration: underline; }
+        
+        .btn-primary { width: 100%; background-color: var(--primary-color); color: white; border: none; border-radius: 30px; padding: 16px; font-size: 18px; font-weight: bold; cursor: pointer; transition: opacity 0.2s; }
         .btn-primary:active { opacity: 0.8; }
-
-        .btn-disabled {
-            background-color: #F8BBD0;
-            color: white;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
-        /* OTP Styles */
-        .otp-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 20px;
-            width: 100%;
-        }
-
-        .otp-input {
-            width: 100%;
-            height: 55px;
-            background-color: #F0F2F5;
-            border: none;
-            border-radius: 12px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-            caret-color: var(--primary-color);
-        }
-
-        .otp-input:focus {
-            outline: 2px solid var(--primary-color);
-            background-color: #fff;
-        }
-
-        .otp-actions {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            margin-bottom: 30px;
-            font-size: 13px;
-        }
-
+        .btn-disabled { background-color: #F8BBD0; color: white; cursor: not-allowed; pointer-events: none; }
+        
+        .otp-container { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 20px; width: 100%; }
+        .otp-input { width: 100%; height: 55px; background-color: #F0F2F5; border: none; border-radius: 12px; text-align: center; font-size: 24px; font-weight: bold; color: #333; caret-color: var(--primary-color); }
+        .otp-input:focus { outline: 2px solid var(--primary-color); background-color: #fff; }
+        
+        .otp-actions { display: flex; justify-content: space-between; width: 100%; margin-bottom: 30px; font-size: 13px; }
         .resend-link { color: #666; cursor: pointer; }
         .timer { color: #666; }
-
+        
         /* Dialog Modal */
-        .dialog-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.6);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(2px);
-        }
-
-        .dialog-box {
-            background: white;
-            width: 85%;
-            max-width: 320px;
-            border-radius: 20px;
-            padding: 25px 20px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes popIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
+        .dialog-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(2px); }
+        .dialog-box { background: white; width: 85%; max-width: 320px; border-radius: 20px; padding: 25px 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .dialog-icon { font-size: 40px; margin-bottom: 15px; display: block; }
         .dialog-title { font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #333; }
         .dialog-msg { font-size: 14px; color: #666; margin-bottom: 25px; line-height: 1.5; }
-
-        .dialog-btn {
-            width: 100%;
-            padding: 12px;
-            border-radius: 12px;
-            border: none;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-
+        .dialog-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; margin-bottom: 10px; }
         .btn-confirm { background-color: var(--primary-color); color: white; }
         .btn-cancel { background-color: #f0f0f0; color: #333; }
-
+        
         .hidden { display: none !important; }
+        /* إخفاء عنصر recaptcha المطلوب تقنياً */
+        #recaptcha-container { position: absolute; top: -9999px; left: -9999px; }
     </style>
 </head>
 <body>
@@ -293,7 +94,7 @@
                     <input type="tel" id="phoneNumber" placeholder="xx xxx xxxx" maxlength="10">
                     <div class="country-code">
                         <span>+961</span>
-                        <div class="flag"></div> <!-- العلم اللبناني المعدل -->
+                        <div class="flag"></div>
                     </div>
                 </div>
             </div>
@@ -339,6 +140,9 @@
         </div>
     </div>
 
+    <!-- عنصر Recaptcha المخفي (ضروري لعمل Firebase Auth) -->
+    <div id="recaptcha-container"></div>
+
     <script>
         // --- Firebase Configuration ---
         var firebaseConfig = {
@@ -352,17 +156,23 @@
             measurementId: "G-MZDXDMQ2HB"
         };
 
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+        let auth, db;
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            auth = firebase.auth();
+            db = firebase.database();
+            auth.languageCode = 'ar';
+            console.log('✅ Firebase initialized successfully');
+        } catch(e) {
+            console.error('❌ Firebase init failed:', e);
+            alert("خطأ في تهيئة النظام، يرجى تحديث الصفحة");
         }
-        const auth = firebase.auth();
-        const db = firebase.database();
-        auth.languageCode = 'ar';
 
         // --- State Variables ---
-        let currentStep = 'login';
         let confirmationResult = null;
-        let isBaseAppLoggedOut = false; // غير هذا إلى true لتجربة الدخول المباشر
+        let isBaseAppLoggedOut = false; 
 
         // --- DOM Elements ---
         const screenLogin = document.getElementById('screen-login');
@@ -392,7 +202,7 @@
                     "warning", 
                     "تنبيه أمني ⚠️", 
                     "ملاحظة: يجب تسجيل الخروج من التطبيق الأساسي قبل التقديم ليتم قبول طلبك وتفعيله بنجاح.",
-                    true // has cancel button
+                    true
                 );
                 return;
             }
@@ -402,8 +212,16 @@
 
         function startFirebaseAuth(phoneNumber) {
             const fullPhone = "+961" + phoneNumber.replace(/\s/g, '');
+            
+            // إعداد Recaptcha المخفي لتجنب ظهور نافذة التحقق المزعجة
+            const appVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+                'size': 'invisible',
+                'callback': (response) => {
+                    // reCAPTCHA solved, allow signInWithPhoneNumber.
+                }
+            });
 
-            auth.signInWithPhoneNumber(fullPhone)
+            auth.signInWithPhoneNumber(fullPhone, appVerifier)
                 .then((result) => {
                     confirmationResult = result;
                     switchScreen('otp');
@@ -411,7 +229,11 @@
                 })
                 .catch((error) => {
                     console.error("SMS Error:", error);
-                    alert("حدث خطأ أثناء إرسال الرمز: " + error.message);
+                    // معالجة أخطاء محددة مثل quota exceeded أو invalid number
+                    let msg = error.message;
+                    if(error.code === 'auth/too-many-requests') msg = "تم تجاوز عدد المحاولات المسموحة، يرجى الانتظار قليلاً.";
+                    if(error.code === 'auth/invalid-phone-number') msg = "رقم الهاتف غير صحيح.";
+                    alert("حدث خطأ: " + msg);
                 });
         }
 
@@ -422,9 +244,13 @@
 
             if (code.length !== 6) return;
 
-            verificationResult = confirmationResult.confirm(code);
-            
-            verificationResult.then((user) => {
+            if(!confirmationResult) {
+                alert("انتهت صلاحية الجلسة، يرجى العودة للصفحة الرئيسية");
+                goBack();
+                return;
+            }
+
+            confirmationResult.confirm(code).then((user) => {
                 showDialog("success", "تم بنجاح ✅", "تم تسجيل طلبك بنجاح وتم تفعيل الحساب.", false);
                 setTimeout(() => { window.location.reload(); }, 3000);
             }).catch((error) => {
@@ -486,7 +312,9 @@
                     resendLink.style.pointerEvents = "auto";
                     resendLink.style.color = "var(--primary-color)";
                     resendLink.onclick = () => {
-                        alert("تم إعادة إرسال الرمز (محاكاة)");
+                        // إعادة إرسال الرمز
+                        const phone = phoneInput.value.trim();
+                        if(phone) startFirebaseAuth(phone);
                         startTimer();
                         resendLink.style.opacity = "0.5";
                         resendLink.style.pointerEvents = "none";
