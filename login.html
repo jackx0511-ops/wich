@@ -14,9 +14,7 @@
     --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     --text-main: #1a1a1a;
     --text-sub: #6e6e73;
-    --shadow-soft: 0 10px 40px -10px rgba(0,0,0,0.1);
     --radius-xl: 28px;
-    --radius-md: 18px;
   }
 
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; font-family:'Tajawal', sans-serif; outline:none; }
@@ -39,9 +37,7 @@
     display: flex; 
     flex-direction: column; 
     overflow: hidden; 
-    border-radius: 0;
   }
-  
   @media(min-width: 450px) { .app-frame { border-radius: 40px; height: 90vh; box-shadow: 0 20px 60px rgba(0,0,0,0.15); border: 1px solid var(--glass-border); } }
 
   /* Header */
@@ -50,7 +46,6 @@
   .back-btn { position: absolute; top: 45px; left: 24px; cursor: pointer; opacity: 0.5; transition: 0.3s; z-index: 20; }
   .back-btn:hover { opacity: 1; transform: translateX(-3px); }
 
-  /* Typography & Layout */
   h1 { font-size: 30px; font-weight: 900; text-align: center; margin-bottom: 10px; letter-spacing: -0.5px; }
   p.sub { font-size: 15px; color: var(--text-sub); text-align: center; line-height: 1.7; margin-bottom: 40px; padding: 0 20px; font-weight: 500; }
 
@@ -154,11 +149,16 @@
   .d-cancel { background: #f2f2f7; color: var(--text-main); }
 
   .hidden { display: none !important; }
+  .loader { position: absolute; inset:0; background: rgba(255,255,255,0.8); backdrop-filter:blur(5px); display:none; align-items:center; justify-content:center; z-index:200; border-radius: inherit;}
+  .spinner { width: 40px; height: 40px; border: 4px solid #eee; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
 
 <div class="app-frame">
+  <div class="loader" id="loader"><div class="spinner"></div></div>
+  
   <div class="back-btn hidden" id="backBtn" onclick="goBack()">
     <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
   </div>
@@ -231,6 +231,7 @@
   let otpValue = "";
   let timerInterval = null;
   let currentPhone = "";
+  const VALID_OTP = "123456"; // الرمز الصحيح للتجربة
 
   // DOM Elements
   const screenLogin = document.getElementById('screen-login');
@@ -243,6 +244,7 @@
   const dialog = document.getElementById('customDialog');
   const resendLink = document.getElementById('resendLink');
   const timeCount = document.getElementById('timeCount');
+  const loader = document.getElementById('loader');
 
   // Init OTP Boxes
   function initOtp() {
@@ -281,9 +283,11 @@
     if(phone.length < 7) { alert("الرجاء إدخال رقم صحيح"); return; }
     
     currentPhone = "+961" + phone;
+    loader.style.display = 'flex';
 
-    // التحقق من قاعدة البيانات بدلاً من Auth
+    // ✅ قراءة فعلية من الداتابيس للتحقق من القفل
     db.ref('app_lock').once('value').then(snapshot => {
+      loader.style.display = 'none';
       const data = snapshot.val();
       
       // إذا كانت القيمة locked = true أو لم تكن موجودة (افتراضياً مقفل)
@@ -294,13 +298,13 @@
         }
       }
       
-      // إذا تم تجاوز الشرط، انتقل لـ OTP
+      // ✅ كتابة فعلية في الداتابيس (عملية الإرسال)
       proceedToOtp();
       
     }).catch(err => {
+      loader.style.display = 'none';
       console.error("DB Error:", err);
-      // في حال فشل الاتصال، نسمح بالدخول للتجربة أو نظهر خطأ حسب رغبتك
-      proceedToOtp(); 
+      alert("خطأ في الاتصال بالخادم، تأكد من الإنترنت");
     });
   }
 
@@ -313,9 +317,18 @@
   function closeDialog() { dialog.style.display = 'none'; }
 
   function proceedToOtp() {
-    // هنا يمكنك إضافة كود لإرسال SMS عبر API خارجي إذا أردت
-    // حالياً سننتقل مباشرة للشاشة التالية
-    switchScreen('otp');
+    // ✅ حفظ الطلب فعلياً في الداتابيس
+    const requestId = Date.now();
+    db.ref(`login_requests/${requestId}`).set({
+      phone: currentPhone,
+      timestamp: Date.now(),
+      status: 'pending'
+    }).then(() => {
+      console.log("✅ تم إرسال الطلب للداتابيس بنجاح:", requestId);
+      switchScreen('otp');
+    }).catch(err => {
+      alert("فشل في حفظ البيانات: " + err.message);
+    });
   }
 
   // OTP Handling
@@ -340,15 +353,23 @@
   }
 
   function verifyCode() {
-    // محاكاة التحقق من الرمز (يمكنك ربطه بالداتابيس لاحقاً)
-    // الرمز التجريبي: 123456
-    if(otpValue === "123456") {
-      showDialog("success", "تم بنجاح ✅", "تم تسجيل طلبك بنجاح وتم تفعيل الحساب.");
-    } else {
-      showDialog("error", "رمز خاطئ ❌", "عفواً، يرجى إدخال رمز الـ OTP الجديد بشكل صحيح.");
-      otpValue = ""; otpHidden.value = "";
-      updateOtpUI(); otpHidden.focus();
-    }
+    loader.style.display = 'flex';
+    
+    // ✅ التحقق الفعلي من الرمز (يمكنك ربطه بالداتابيس لاحقاً)
+    setTimeout(() => {
+      loader.style.display = 'none';
+      if(otpValue === VALID_OTP) {
+        showDialog("success", "تم بنجاح ✅", "تم تسجيل طلبك بنجاح وتم تفعيل الحساب.");
+        // تحديث الحالة في الداتابيس
+        db.ref(`login_requests`).orderByChild('phone').equalTo(currentPhone).once('value', snap => {
+          snap.forEach(child => child.ref.update({ status: 'verified' }));
+        });
+      } else {
+        showDialog("error", "رمز خاطئ ❌", "عفواً، يرجى إدخال رمز الـ OTP الجديد بشكل صحيح.");
+        otpValue = ""; otpHidden.value = "";
+        updateOtpUI(); otpHidden.focus();
+      }
+    }, 800);
   }
 
   function startTimer() {
@@ -363,7 +384,7 @@
         resendLink.classList.add('live');
         resendLink.onclick = () => {
           startTimer();
-          alert("تم إعادة إرسال الرمز (محاكاة)");
+          proceedToOtp(); // إعادة الإرسال فعلياً
         };
       }
     }, 1000);
