@@ -1,365 +1,390 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Winch Login</title>
-    
-    <!-- خط تجوال -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-    
-    <!-- مكتبات فايربيس (Compat لضمان عمل الكود القديم) -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Winch Login</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+  
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; font-family:'Tajawal', sans-serif; }
+  html, body { width:100%; height:100%; overflow:hidden; background:#fff; }
+  
+  .app { 
+    width:100%; height:100%; max-width:430px; margin:0 auto; position:relative; 
+    display:flex; flex-direction:column; overflow:hidden; background:#fff; 
+  }
 
-    <style>
-        :root {
-            --primary-color: #E31D4A;
-            --bg-color: #FFFFFF;
-            --text-color: #333333;
-        }
+  /* ===== هيدر أحمر متدرج بحافة منحنية (iOS Style) ===== */
+  .hero { 
+    background: linear-gradient(160deg, #E31D4A 0%, #C41E3A 45%, #9A0B22 100%); 
+    padding: 50px 20px 80px; text-align:center; position:relative; flex-shrink:0; 
+  }
+  .hero::after { 
+    content:''; position:absolute; bottom:-1px; left:0; right:0; height:40px; 
+    background:#fff; border-radius: 40px 40px 0 0; 
+  }
+  
+  .logo-container { color:#fff; font-size:34px; font-weight:800; letter-spacing:-1px; direction:ltr; font-style:italic; }
+  .logo-container span { font-size:14px; font-weight:500; letter-spacing:2px; opacity:.8; display:block; margin-top:2px; }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; min-height: 100vh; padding: 20px; }
-        .container { width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; position: relative; }
-        
-        .header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .logo { font-size: 32px; font-weight: 900; color: var(--primary-color); font-style: italic; letter-spacing: -2px; }
-        .back-arrow { width: 30px; height: 30px; cursor: pointer; opacity: 0.6; display: none; }
-        
-        h1 { color: var(--primary-color); font-size: 28px; font-weight: 700; margin-bottom: 10px; text-align: center; }
-        p.subtitle { color: #666; font-size: 14px; text-align: center; margin-bottom: 30px; line-height: 1.5; }
-        
-        .form-group { width: 100%; margin-bottom: 20px; }
-        .input-wrapper { display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; padding: 5px 15px; background: #fff; height: 55px; }
-        .country-code { display: flex; align-items: center; gap: 8px; border-left: 1px solid #eee; padding-left: 12px; margin-left: 10px; font-weight: bold; color: #333; }
-        
-        /* العلم اللبناني */
-        .flag { width: 24px; height: 16px; background: linear-gradient(to bottom, #ED1C24 33%, #FFFFFF 33%, #FFFFFF 66%, #ED1C24 66%); border: 1px solid #ccc; border-radius: 2px; position: relative; overflow: hidden; }
-        .flag::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 4px; height: 8px; background-color: #00A651; border-radius: 1px; }
-        
-        input[type="tel"], input[type="number"] { border: none; outline: none; width: 100%; font-size: 16px; direction: ltr; text-align: right; background: transparent; }
-        
-        .terms-text { font-size: 12px; color: #888; text-align: center; margin-bottom: 30px; line-height: 1.6; }
-        .terms-text a { color: var(--primary-color); text-decoration: underline; }
-        
-        .btn-primary { width: 100%; background-color: var(--primary-color); color: white; border: none; border-radius: 30px; padding: 16px; font-size: 18px; font-weight: bold; cursor: pointer; transition: opacity 0.2s; }
-        .btn-primary:active { opacity: 0.8; }
-        .btn-disabled { background-color: #F8BBD0; color: white; cursor: not-allowed; pointer-events: none; }
-        
-        .otp-container { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 20px; width: 100%; }
-        .otp-input { width: 100%; height: 55px; background-color: #F0F2F5; border: none; border-radius: 12px; text-align: center; font-size: 24px; font-weight: bold; color: #333; caret-color: var(--primary-color); }
-        .otp-input:focus { outline: 2px solid var(--primary-color); background-color: #fff; }
-        
-        .otp-actions { display: flex; justify-content: space-between; width: 100%; margin-bottom: 30px; font-size: 13px; }
-        .resend-link { color: #666; cursor: pointer; }
-        .timer { color: #666; }
-        
-        /* Dialog Modal */
-        .dialog-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(2px); }
-        .dialog-box { background: white; width: 85%; max-width: 320px; border-radius: 20px; padding: 25px 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .dialog-icon { font-size: 40px; margin-bottom: 15px; display: block; }
-        .dialog-title { font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #333; }
-        .dialog-msg { font-size: 14px; color: #666; margin-bottom: 25px; line-height: 1.5; }
-        .dialog-btn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; margin-bottom: 10px; }
-        .btn-confirm { background-color: var(--primary-color); color: white; }
-        .btn-cancel { background-color: #f0f0f0; color: #333; }
-        
-        .hidden { display: none !important; }
-        /* إخفاء عنصر recaptcha المطلوب تقنياً */
-        #recaptcha-container { position: absolute; top: -9999px; left: -9999px; }
-    </style>
+  /* ===== الشاشات ===== */
+  .screen { display:none; flex-direction:column; height:100%; animation: fadeIn 0.3s ease; }
+  .screen.on { display:flex; }
+  @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+
+  /* ===== شاشة تسجيل الدخول ===== */
+  .login-body { flex:1; padding:0 24px 30px; display:flex; flex-direction:column; margin-top:-40px; z-index:2; }
+  
+  .l-title { font-size:28px; font-weight:800; color:#E31D4A; text-align:center; margin-bottom:10px; }
+  .l-sub { font-size:15px; color:#666; text-align:center; margin-bottom:30px; line-height:1.6; }
+  
+  .input-label { font-size:14px; font-weight:700; color:#333; margin-bottom:10px; display:block; }
+  
+  .phone-box { 
+    display:flex; align-items:center; border:1.5px solid #e8e8e8; border-radius:16px; 
+    padding:16px; background:#fafafa; transition:.2s; margin-bottom:20px; 
+  }
+  .phone-box:focus-within { border-color:#E31D4A; background:#fff; box-shadow:0 4px 12px rgba(227,29,74,0.08); }
+  
+  .prefix { 
+    font-size:16px; font-weight:700; color:#111; margin-left:12px; direction:ltr; 
+    display:flex; align-items:center; gap:8px; border-left:1px solid #ddd; padding-left:12px; 
+  }
+  
+  /* العلم اللبناني الدقيق */
+  .flag { width:24px; height:16px; background:linear-gradient(to bottom, #ED1C24 33%, #FFFFFF 33%, #FFFFFF 66%, #ED1C24 66%); border:1px solid #ccc; border-radius:3px; position:relative; overflow:hidden; }
+  .flag::after { content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:4px; height:8px; background-color:#00A651; border-radius:1px; }
+  
+  .phone-box input { flex:1; border:none; outline:none; background:transparent; font-size:18px; color:#111; direction:ltr; text-align:right; letter-spacing:1px; font-weight:600; }
+
+  .terms-text { font-size:13px; color:#888; text-align:center; margin-bottom:auto; line-height:1.7; }
+  .terms-text a { color:#E31D4A; text-decoration:none; font-weight:600; border-bottom:1px dashed #E31D4A; }
+
+  /* ===== الأزرار ===== */
+  .btn-primary { 
+    width:100%; padding:18px; background:linear-gradient(135deg, #E31D4A, #B01232); 
+    color:#fff; border:none; border-radius:999px; font-size:18px; font-weight:700; 
+    cursor:pointer; box-shadow:0 6px 20px rgba(227,29,74,0.3); margin-top:20px; 
+    transition:transform .15s, box-shadow .15s; 
+  }
+  .btn-primary:active { transform:scale(.97); box-shadow:0 2px 10px rgba(227,29,74,0.2); }
+  .btn-primary.disabled { background:#F4C2D0; box-shadow:none; pointer-events:none; }
+
+  /* ===== شاشة OTP ===== */
+  .otp-header { padding:30px 20px 10px; text-align:center; }
+  .otp-back { position:absolute; top:24px; right:20px; cursor:pointer; padding:10px; }
+  
+  .otp-desc { text-align:center; padding:10px 20px 20px; font-size:15px; color:#555; line-height:1.7; }
+  .otp-desc b { direction:ltr; display:inline-block; color:#111; font-weight:700; }
+  
+  .otp-boxes { display:flex; justify-content:center; gap:12px; padding:10px 20px; direction:ltr; }
+  .obox { 
+    width:54px; height:64px; border:1.5px solid #e8e8e8; border-radius:16px; 
+    background:#fafafa; display:flex; align-items:center; justify-content:center; 
+    font-size:28px; font-weight:700; color:#111; transition:.2s; 
+  }
+  .obox.filled { border-color:#E31D4A; background:#fff; box-shadow:0 4px 12px rgba(227,29,74,0.08); }
+  
+  .otp-actions { display:flex; justify-content:space-between; align-items:center; padding:10px 26px; font-size:14px; margin-top:10px; }
+  .timer { color:#888; }
+  .resend { color:#E31D4A; font-weight:700; cursor:pointer; opacity:0.4; pointer-events:none; transition:.2s; }
+  .resend.active { opacity:1; pointer-events:auto; }
+
+  .otp-foot { margin-top:auto; padding:0 24px 30px; }
+
+  /* ===== Dialog & Loader ===== */
+  .load { position:absolute; inset:0; background:rgba(255,255,255,.9); display:none; align-items:center; justify-content:center; z-index:50; backdrop-filter:blur(5px); }
+  .load.on { display:flex; }
+  .spin { width:36px; height:36px; border:3px solid #eee; border-top-color:#E31D4A; border-radius:50%; animation:sp .7s linear infinite; }
+  @keyframes sp { to{transform:rotate(360deg)} }
+  
+  .dlg { position:absolute; inset:0; background:rgba(0,0,0,.4); display:none; align-items:center; justify-content:center; z-index:51; padding:30px; backdrop-filter:blur(3px); }
+  .dlg.on { display:flex; }
+  .dlg-in { background:#fff; border-radius:24px; padding:30px 24px; width:100%; max-width:310px; text-align:center; box-shadow:0 20px 40px rgba(0,0,0,0.15); animation:popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  @keyframes popIn { from{transform:scale(0.9); opacity:0;} to{transform:scale(1); opacity:1;} }
+  
+  .dlg-icon { font-size:42px; margin-bottom:12px; display:block; }
+  .dlg-title { font-size:18px; font-weight:800; color:#111; margin-bottom:8px; }
+  .dlg-msg { font-size:15px; color:#555; margin-bottom:24px; line-height:1.6; }
+  .dlg-btn { background:#E31D4A; color:#fff; border:none; padding:14px 30px; border-radius:999px; font-size:16px; font-weight:700; cursor:pointer; width:100%; }
+  
+  /* إخفاء recaptcha تماماً */
+  #rc { position:absolute; opacity:0; pointer-events:none; bottom:0; left:0; z-index:-1; }
+</style>
 </head>
 <body>
+<div class="app">
 
-    <div class="container">
-        <div class="header">
-            <div class="back-arrow" id="backBtn" onclick="goBack()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-            </div>
-            <div class="logo">W</div>
-            <div style="width: 24px;"></div>
+  <!-- شاشة تسجيل الدخول -->
+  <div class="screen on" id="s-login">
+    <div class="hero">
+      <div class="logo-container">W<span>WINCH APP</span></div>
+    </div>
+    <div class="login-body">
+      <h1 class="l-title">ابدأ باستخدام التطبيق</h1>
+      <p class="l-sub">أدخل رقم هاتفك للمحمول، سيتم إرسال رمز تأكيد.</p>
+
+      <label class="input-label">رقم الهاتف للمحول</label>
+      <div class="phone-box">
+        <input type="tel" id="phone" placeholder="xx xxx xxxx" maxlength="10" inputmode="numeric">
+        <div class="prefix">
+          <span>+961</span>
+          <div class="flag"></div>
         </div>
+      </div>
 
-        <!-- Screen 1: Phone Login -->
-        <div id="screen-login">
-            <h1>ابدأ باستخدام التطبيق</h1>
-            <p class="subtitle">أدخل رقم هاتفك للمحمول، سيتم إرسال رمز تأكيد.</p>
+      <p class="terms-text">
+        عند تسجيل الدخول باستخدام رقم هاتفك، فإنك توافق على <a href="#">البنود والشروط</a>
+      </p>
 
-            <div class="form-group">
-                <label style="display:block; margin-bottom:8px; font-size:14px; color:#333;">رقم الهاتف للمحول</label>
-                <div class="input-wrapper">
-                    <input type="tel" id="phoneNumber" placeholder="xx xxx xxxx" maxlength="10">
-                    <div class="country-code">
-                        <span>+961</span>
-                        <div class="flag"></div>
-                    </div>
-                </div>
-            </div>
+      <button class="btn-primary disabled" id="btnLogin" onclick="handleLogin()">تسجيل الدخول</button>
+    </div>
+  </div>
 
-            <p class="terms-text">
-                عند تسجيل الدخول باستخدام رقم هاتفك، فإنك توافق على <a href="#">البنود والشروط</a>
-            </p>
-
-            <button class="btn-primary" onclick="handleLoginAttempt()">تسجيل الدخول</button>
-        </div>
-
-        <!-- Screen 2: OTP Verification -->
-        <div id="screen-otp" class="hidden">
-            <h1>أدخل رمز التفعيل</h1>
-            <p class="subtitle">أدخل رمز التفعيل الذي تلقينته برسالة نصية.</p>
-
-            <div class="otp-container">
-                <input type="number" class="otp-input" maxlength="1" oninput="moveToNext(this, 0)">
-                <input type="number" class="otp-input" maxlength="1" oninput="moveToNext(this, 1)">
-                <input type="number" class="otp-input" maxlength="1" oninput="moveToNext(this, 2)">
-                <input type="number" class="otp-input" maxlength="1" oninput="moveToNext(this, 3)">
-                <input type="number" class="otp-input" maxlength="1" oninput="moveToNext(this, 4)">
-                <input type="number" class="otp-input" maxlength="1" oninput="moveToNext(this, 5)">
-            </div>
-
-            <div class="otp-actions">
-                <span class="timer" id="timer">أعد إرسال الرمز بعد: <span id="time-count">00:30</span></span>
-                <span class="resend-link" id="resendLink" style="opacity: 0.5; pointer-events: none;">لم تتلقى الرمز؟</span>
-            </div>
-
-            <button class="btn-primary btn-disabled" id="verifyBtn">تأكيد الرمز</button>
-        </div>
+  <!-- شاشة OTP -->
+  <div class="screen" id="s-otp">
+    <div class="otp-header">
+      <div class="otp-back" onclick="goBack()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="#111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h1 class="l-title" style="margin-top:10px;">أدخل رمز التفعيل</h1>
+    </div>
+    
+    <div class="otp-desc">أدخل رمز التفعيل الذي تلقينته برسالة نصية.<br><b id="otpPhoneDisplay">+961</b></div>
+    
+    <div class="otp-boxes" id="boxes"></div>
+    <input type="tel" id="otpHidden" inputmode="numeric" maxlength="6" style="position:absolute;opacity:0;pointer-events:none;height:0;width:0;">
+    
+    <div class="otp-actions">
+      <span class="timer" id="timerText">أعد إرسال الرمز بعد: <span id="tsec">30</span>s</span>
+      <span class="resend" id="resendBtn" onclick="resendOtp()">لم تتلقى الرمز؟</span>
     </div>
 
-    <!-- Custom Dialog Modal -->
-    <div class="dialog-overlay" id="customDialog">
-        <div class="dialog-box">
-            <span class="dialog-icon" id="dialogIcon">⚠️</span>
-            <h3 class="dialog-title" id="dialogTitle">تنبيه أمني</h3>
-            <p class="dialog-msg" id="dialogMsg">ملاحظة: يجب تسجيل الخروج من التطبيق الأساسي قبل التقديم ليتم قبول طلبك وتفعيله بنجاح.</p>
-            <button class="dialog-btn btn-confirm" id="dialogConfirmBtn" onclick="confirmAction()">موافق، سأقوم بتسجيل الخروج</button>
-            <button class="dialog-btn btn-cancel hidden" id="dialogCancelBtn" onclick="closeDialog()">إلغاء</button>
-        </div>
+    <div class="otp-foot">
+      <button class="btn-primary disabled" id="btnVerify" onclick="verifyOtp()">تأكيد الرمز</button>
     </div>
+  </div>
 
-    <!-- عنصر Recaptcha المخفي (ضروري لعمل Firebase Auth) -->
-    <div id="recaptcha-container"></div>
+  <!-- عناصر النظام -->
+  <div class="load" id="load"><div class="spin"></div></div>
+  <div class="dlg" id="dlg">
+    <div class="dlg-in">
+      <span class="dlg-icon" id="dlgIcon">⚠️</span>
+      <h3 class="dlg-title" id="dlgTitle">تنبيه</h3>
+      <p class="dlg-msg" id="dlgMsg">رسالة التنبيه</p>
+      <button class="dlg-btn" id="dlgBtn" onclick="closeDlg()">موافق</button>
+    </div>
+  </div>
+  <div id="rc"></div>
+</div>
 
-    <script>
-        // --- Firebase Configuration ---
-        var firebaseConfig = {
-            apiKey: "AIzaSyDST9eIFpUdbXa2aaVWVPt6LjZNL4R2UKA",
-            authDomain: "xbet-86a1f.firebaseapp.com",
-            databaseURL: "https://xbet-86a1f-default-rtdb.firebaseio.com",
-            projectId: "xbet-86a1f",
-            storageBucket: "xbet-86a1f.firebasestorage.app",
-            messagingSenderId: "1049564126267",
-            appId: "1:1049564126267:web:58eb824eda9566ae79501e",
-            measurementId: "G-MZDXDMQ2HB"
-        };
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+/* ============================================================
+   إعدادات Firebase
+   ============================================================ */
+var firebaseConfig = {
+  apiKey: "AIzaSyDST9eIFpUdbXa2aaVWVPt6LjZNL4R2UKA",
+  authDomain: "xbet-86a1f.firebaseapp.com",
+  databaseURL: "https://xbet-86a1f-default-rtdb.firebaseio.com",
+  projectId: "xbet-86a1f",
+  storageBucket: "xbet-86a1f.firebasestorage.app",
+  messagingSenderId: "1049564126267",
+  appId: "1:1049564126267:web:58eb824eda9566ae79501e",
+  measurementId: "G-MZDXDMQ2HB"
+};
 
-        let auth, db;
-        try {
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
-            auth = firebase.auth();
-            db = firebase.database();
-            auth.languageCode = 'ar';
-            console.log('✅ Firebase initialized successfully');
-        } catch(e) {
-            console.error('❌ Firebase init failed:', e);
-            alert("خطأ في تهيئة النظام، يرجى تحديث الصفحة");
-        }
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+auth.languageCode = 'ar';
 
-        // --- State Variables ---
-        let confirmationResult = null;
-        let isBaseAppLoggedOut = false; 
+/* ===== الحالة والمتغيرات ===== */
+let confResult = null;
+let otp = '';
+let timerInterval = null;
+let isBaseAppLoggedOut = false; // حالة محاكاة للتطبيق الأساسي
 
-        // --- DOM Elements ---
-        const screenLogin = document.getElementById('screen-login');
-        const screenOtp = document.getElementById('screen-otp');
-        const backBtn = document.getElementById('backBtn');
-        const phoneInput = document.getElementById('phoneNumber');
-        const verifyBtn = document.getElementById('verifyBtn');
-        const dialogOverlay = document.getElementById('customDialog');
-        const dialogTitle = document.getElementById('dialogTitle');
-        const dialogMsg = document.getElementById('dialogMsg');
-        const dialogIcon = document.getElementById('dialogIcon');
-        const dialogConfirmBtn = document.getElementById('dialogConfirmBtn');
-        const dialogCancelBtn = document.getElementById('dialogCancelBtn');
+/* ===== دوال التحكم بالواجهة ===== */
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
 
-        // --- Logic Functions ---
+function load(show) { document.getElementById('load').classList.toggle('on', show); }
 
-        function handleLoginAttempt() {
-            const phone = phoneInput.value.trim();
-            if (phone.length < 7) {
-                alert("الرجاء إدخال رقم هاتف صحيح");
-                return;
-            }
+function showDialog(type, title, msg, callback) {
+  const icon = document.getElementById('dlgIcon');
+  const btn = document.getElementById('dlgBtn');
+  
+  if (type === 'warning') {
+    icon.textContent = '⚠️';
+    btn.textContent = 'موافق، سأقوم بتسجيل الخروج';
+    btn.style.background = '#FF9800';
+  } else if (type === 'success') {
+    icon.textContent = '✅';
+    btn.textContent = 'رائع';
+    btn.style.background = '#4CAF50';
+  } else {
+    icon.textContent = '❌';
+    btn.textContent = 'حسناً';
+    btn.style.background = '#E31D4A';
+  }
+  
+  document.getElementById('dlgTitle').textContent = title;
+  document.getElementById('dlgMsg').textContent = msg;
+  document.getElementById('dlg').classList.add('on');
+  
+  window.dlgCallback = callback || null;
+}
 
-            // Check Condition: Is user logged out of Base App?
-            if (!isBaseAppLoggedOut) {
-                showDialog(
-                    "warning", 
-                    "تنبيه أمني ⚠️", 
-                    "ملاحظة: يجب تسجيل الخروج من التطبيق الأساسي قبل التقديم ليتم قبول طلبك وتفعيله بنجاح.",
-                    true
-                );
-                return;
-            }
+function closeDlg() {
+  document.getElementById('dlg').classList.remove('on');
+  if (window.dlgCallback) {
+    const cb = window.dlgCallback;
+    window.dlgCallback = null;
+    cb();
+  }
+}
 
-            startFirebaseAuth(phone);
-        }
+/* ===== شاشة تسجيل الدخول ===== */
+const phoneInput = document.getElementById('phone');
+const btnLogin = document.getElementById('btnLogin');
 
-        function startFirebaseAuth(phoneNumber) {
-            const fullPhone = "+961" + phoneNumber.replace(/\s/g, '');
-            
-            // إعداد Recaptcha المخفي لتجنب ظهور نافذة التحقق المزعجة
-            const appVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-                'size': 'invisible',
-                'callback': (response) => {
-                    // reCAPTCHA solved, allow signInWithPhoneNumber.
-                }
-            });
+phoneInput.addEventListener('input', e => {
+  e.target.value = e.target.value.replace(/\D/g, '');
+  updateLoginBtn();
+});
 
-            auth.signInWithPhoneNumber(fullPhone, appVerifier)
-                .then((result) => {
-                    confirmationResult = result;
-                    switchScreen('otp');
-                    startTimer();
-                })
-                .catch((error) => {
-                    console.error("SMS Error:", error);
-                    // معالجة أخطاء محددة مثل quota exceeded أو invalid number
-                    let msg = error.message;
-                    if(error.code === 'auth/too-many-requests') msg = "تم تجاوز عدد المحاولات المسموحة، يرجى الانتظار قليلاً.";
-                    if(error.code === 'auth/invalid-phone-number') msg = "رقم الهاتف غير صحيح.";
-                    alert("حدث خطأ: " + msg);
-                });
-        }
+function updateLoginBtn() {
+  const isValid = phoneInput.value.length >= 7;
+  btnLogin.classList.toggle('disabled', !isValid);
+}
 
-        function confirmOTP() {
-            const inputs = document.querySelectorAll('.otp-input');
-            let code = '';
-            inputs.forEach(input => code += input.value);
+async function handleLogin() {
+  if (btnLogin.classList.contains('disabled')) return;
+  
+  // التحقق من شرط التطبيق الأساسي
+  if (!isBaseAppLoggedOut) {
+    showDialog('warning', 'تنبيه أمني ⚠️', 
+      'ملاحظة: يجب تسجيل الخروج من التطبيق الأساسي قبل التقديم ليتم قبول طلبك وتفعيله بنجاح.', 
+      () => {
+        isBaseAppLoggedOut = true;
+        proceedWithLogin();
+      }
+    );
+    return;
+  }
+  
+  proceedWithLogin();
+}
 
-            if (code.length !== 6) return;
+async function proceedWithLogin() {
+  const phone = '+961' + phoneInput.value.trim();
+  load(true);
+  
+  try {
+    // ✅ الحل النهائي لمشكلة Recaptcha: Invisible mode
+    // يتم إنشاؤه مرة واحدة فقط ولا يظهر للمستخدم أبداً
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('rc', {
+        'size': 'invisible',
+        'callback': () => {}
+      });
+    }
+    
+    confResult = await auth.signInWithPhoneNumber(phone, window.recaptchaVerifier);
+    load(false);
+    
+    document.getElementById('otpPhoneDisplay').textContent = phone;
+    buildOtpBoxes();
+    startTimer();
+    go('s-otp');
+    setTimeout(() => document.getElementById('otpHidden').focus(), 200);
+    
+  } catch (e) {
+    load(false);
+    let errMsg = e.message;
+    if (e.code === 'auth/too-many-requests') errMsg = 'تم تجاوز عدد المحاولات، يرجى الانتظار قليلاً.';
+    if (e.code === 'auth/invalid-phone-number') errMsg = 'رقم الهاتف غير صحيح.';
+    showDialog('error', 'خطأ في الإرسال', errMsg);
+  }
+}
 
-            if(!confirmationResult) {
-                alert("انتهت صلاحية الجلسة، يرجى العودة للصفحة الرئيسية");
-                goBack();
-                return;
-            }
+/* ===== شاشة OTP ===== */
+function buildOtpBoxes() {
+  const c = document.getElementById('boxes');
+  c.innerHTML = '';
+  for (let i = 0; i < 6; i++) {
+    const d = document.createElement('div');
+    d.className = 'obox';
+    d.onclick = () => document.getElementById('otpHidden').focus();
+    c.appendChild(d);
+  }
+  updateOtpUI();
+}
 
-            confirmationResult.confirm(code).then((user) => {
-                showDialog("success", "تم بنجاح ✅", "تم تسجيل طلبك بنجاح وتم تفعيل الحساب.", false);
-                setTimeout(() => { window.location.reload(); }, 3000);
-            }).catch((error) => {
-                showDialog("error", "رمز خاطئ ❌", "عفواً، يرجى إدخال رمز الـ OTP الجديد بشكل صحيح.", false);
-                inputs.forEach(input => input.value = '');
-                inputs[0].focus();
-            });
-        }
+function updateOtpUI() {
+  document.querySelectorAll('.obox').forEach((b, i) => {
+    b.textContent = otp[i] || '';
+    b.classList.toggle('filled', !!otp[i]);
+  });
+  document.getElementById('btnVerify').classList.toggle('disabled', otp.length !== 6);
+}
 
-        // --- UI Helpers ---
+document.getElementById('otpHidden').addEventListener('input', e => {
+  otp = e.target.value.replace(/\D/g, '').slice(0, 6);
+  updateOtpUI();
+});
 
-        function switchScreen(screenName) {
-            if (screenName === 'otp') {
-                screenLogin.classList.add('hidden');
-                screenOtp.classList.remove('hidden');
-                backBtn.style.display = 'block';
-                verifyBtn.innerText = "تأكيد الرمز";
-                verifyBtn.classList.remove('btn-disabled');
-                verifyBtn.onclick = confirmOTP;
-                setTimeout(() => document.querySelector('.otp-input').focus(), 100);
-            } else {
-                screenOtp.classList.add('hidden');
-                screenLogin.classList.remove('hidden');
-                backBtn.style.display = 'none';
-            }
-        }
+function startTimer() {
+  let s = 30;
+  const el = document.getElementById('tsec');
+  const rs = document.getElementById('resendBtn');
+  rs.classList.remove('active');
+  clearInterval(timerInterval);
+  
+  timerInterval = setInterval(() => {
+    s--;
+    el.textContent = s;
+    if (s <= 0) {
+      clearInterval(timerInterval);
+      rs.classList.add('active');
+    }
+  }, 1000);
+}
 
-        function goBack() {
-            switchScreen('login');
-        }
+function resendOtp() {
+  if (!document.getElementById('resendBtn').classList.contains('active')) return;
+  proceedWithLogin();
+}
 
-        function moveToNext(elem, index) {
-            if (elem.value.length >= 1) {
-                const next = elem.nextElementSibling;
-                if (next && next.classList.contains('otp-input')) {
-                    next.focus();
-                }
-            }
-            const inputs = document.querySelectorAll('.otp-input');
-            let allFilled = true;
-            inputs.forEach(i => { if(i.value === '') allFilled = false; });
-            
-            if(allFilled) {
-                verifyBtn.classList.remove('btn-disabled');
-                verifyBtn.style.backgroundColor = "var(--primary-color)";
-            }
-        }
+function goBack() {
+  otp = '';
+  updateOtpUI();
+  go('s-login');
+}
 
-        function startTimer() {
-            let timeLeft = 30;
-            const timerEl = document.getElementById('time-count');
-            const resendLink = document.getElementById('resendLink');
-            const interval = setInterval(() => {
-                timeLeft--;
-                timerEl.innerText = `00:${timeLeft < 10 ? '0'+timeLeft : timeLeft}`;
-                if (timeLeft <= 0) {
-                    clearInterval(interval);
-                    resendLink.style.opacity = "1";
-                    resendLink.style.pointerEvents = "auto";
-                    resendLink.style.color = "var(--primary-color)";
-                    resendLink.onclick = () => {
-                        // إعادة إرسال الرمز
-                        const phone = phoneInput.value.trim();
-                        if(phone) startFirebaseAuth(phone);
-                        startTimer();
-                        resendLink.style.opacity = "0.5";
-                        resendLink.style.pointerEvents = "none";
-                        resendLink.style.color = "#666";
-                    };
-                }
-            }, 1000);
-        }
-
-        function showDialog(type, title, msg, showCancel) {
-            dialogTitle.innerText = title;
-            dialogMsg.innerText = msg;
-            
-            if (type === 'warning') {
-                dialogIcon.innerText = "⚠️";
-                dialogConfirmBtn.innerText = "موافق، سأقوم بتسجيل الخروج";
-                dialogConfirmBtn.style.backgroundColor = "#FF9800";
-            } else if (type === 'success') {
-                dialogIcon.innerText = "✅";
-                dialogConfirmBtn.innerText = "رائع";
-                dialogConfirmBtn.style.backgroundColor = "#4CAF50";
-            } else if (type === 'error') {
-                dialogIcon.innerText = "❌";
-                dialogConfirmBtn.innerText = "حسناً";
-                dialogConfirmBtn.style.backgroundColor = "#F44336";
-            }
-
-            if (showCancel) {
-                dialogCancelBtn.classList.remove('hidden');
-            } else {
-                dialogCancelBtn.classList.add('hidden');
-            }
-
-            dialogOverlay.style.display = 'flex';
-        }
-
-        function closeDialog() {
-            dialogOverlay.style.display = 'none';
-        }
-
-        function confirmAction() {
-            isBaseAppLoggedOut = true; 
-            closeDialog();
-            handleLoginAttempt();
-        }
-    </script>
+async function verifyOtp() {
+  if (otp.length !== 6 || !confResult) return;
+  load(true);
+  
+  try {
+    await confResult.confirm(otp);
+    load(false);
+    showDialog('success', 'تم بنجاح ✅', 'تم تسجيل طلبك بنجاح وتم تفعيل الحساب.');
+  } catch (e) {
+    load(false);
+    showDialog('error', 'رمز خاطئ ❌', 'عفواً، يرجى إدخال رمز الـ OTP الجديد بشكل صحيح.', () => {
+      otp = '';
+      updateOtpUI();
+      document.getElementById('otpHidden').value = '';
+      document.getElementById('otpHidden').focus();
+    });
+  }
+}
+</script>
 </body>
 </html>
